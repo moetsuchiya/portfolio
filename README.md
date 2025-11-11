@@ -21,11 +21,6 @@
 8. [Django コマンド一覧](#Djangoコマンド一覧)
 
 
-<!-- プロジェクト名を記載 -->
-
-## プロジェクト名
-### Standup-Timer
-
 <!-- プロジェクトについて -->
 ## プロジェクトについて
 
@@ -33,8 +28,8 @@
 
 ## リンク集
 
-[UIデザイン](https://www.figma.com/design/Yc0vWj973m4x1SUgvZFLpS/Moe-Portfolio?m=auto&t=mkHpt2ApcHUeN3fR-6)
-[画面遷移図,UI Flow](https://www.figma.com/design/B14XC2oyrUodxDzC8wSofb/UiFlows?m=auto&t=mkHpt2ApcHUeN3fR-6)
+- [UIデザイン](https://www.figma.com/design/Yc0vWj973m4x1SUgvZFLpS/Moe-Portfolio?m=auto&t=mkHpt2ApcHUeN3fR-6)
+- [画面遷移図,UI Flow](https://www.figma.com/design/B14XC2oyrUodxDzC8wSofb/UiFlows?m=auto&t=mkHpt2ApcHUeN3fR-6)
 
 ## 画面一覧
 
