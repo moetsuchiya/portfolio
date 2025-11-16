@@ -15,6 +15,7 @@ export default function ContactPage() {
         setLoading(true);
 
         try {
+            //route.tsのexport async function POST(request: Request) を呼ぶ
             const res = await fetch("/api/contact", {
                 method: "POST",
                 headers: {
