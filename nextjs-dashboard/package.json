@@ -34,9 +34,6 @@
     "onlyBuiltDependencies": [
       "bcrypt",
       "sharp"
-    ],
-    "ignoredBuiltDependencies": [
-      "@prisma/client"
     ]
   }
 }
