@@ -8,13 +8,13 @@ type RequestBody = {
 };
 
 function generateSlug() {
-    // 6文字くらいのランダム文字列（かぶりにくければOK）
+    // 6文字くらいのランダム文字列（かぶりにくければOK）utf8がどうたら?
     return Math.random().toString(36).slice(2, 8);
 }
 
 export async function POST(req: Request) {
     try {
-        const { name, email, body}: RequestBody = await req.json();
+        const { name, email, body}: RequestBody = await req.json(); //TODO: ぶんかつ
 
         if (!name || !email || !body) {
             return NextResponse.json(

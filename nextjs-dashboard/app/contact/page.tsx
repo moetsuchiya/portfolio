@@ -1,7 +1,9 @@
 "use client" //クライアントコンポーネントだよ宣言
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function ContactPage() {
+    const router = useRouter();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
@@ -16,20 +18,29 @@ export default function ContactPage() {
 
         try {
             //route.tsのexport async function POST(request: Request) を呼ぶ
-            const res = await fetch("/api/contact", {
+            const res = await fetch("/api/threads", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ name, email, message }),
+                body: JSON.stringify({ name, email, body: message }),
             });
 
             const data = await res.json();
 
-            if (!res.ok || !data.ok) {
+            if (!res.ok) {
                 throw new Error(data.error || "送信に失敗しました");
             }
+
+            // slug
+            console.log("slug:", data.slug);
+            alert(`slug: ${data.slug}`);
+
+            // ここで router.push を使う
+            router.push(`/t/${data.slug}`);
+
             setSent(true);
+
         } catch (err: any) {
             setError(err.message ?? "エラーが発生しました");
         } finally {
@@ -78,7 +89,7 @@ return (
         className="bg-black text-white px-4 py-2 rounded disabled:opacity-60"
     >
         {loading ? "送信中..." : "送信する（仮）"}
-    </button>
+        </button>
     </form>
 </div>
 );
