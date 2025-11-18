@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
@@ -14,20 +8,73 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//
+// 問い合わせ全体の状態を表す
+// enum: 選択肢を作っておく
+enum ThreadStatus {
+  /// まだ管理者が承認していない状態
+  PENDING
+
+  /// 管理者が承認し、ユーザーへチャットURLを送った状態
+  APPROVED
+
+  /// 対応しない問い合わせ（チャットを開かない）
+  REJECTED
+}
+
+//
+// メッセージの送り主（吹き出しの左右を決める）
+//
+enum MessageAuthor {
+  /// 問い合わせユーザーによる発言
+  USER
+
+  /// 管理者（あなた）による発言
+  OWNER
+}
+
 model Thread {
-  id        String    @id @default(cuid())
-  slug      String    @unique
-  name  String
+  /// スレッド（問い合わせ）の一意ID
+  id        String        @id @default(cuid())
+
+  /// ユーザーへ送るチャットページのURL識別子（例: /t/xxxx）
+  slug      String        @unique
+
+  /// 問い合わせユーザーの名前
+  name      String
+
+  /// 現在の問い合わせステータス
+  status    ThreadStatus  @default(PENDING)
+
+  /// ユーザーのメールアドレス
   email     String
-  createdAt DateTime  @default(now())
+
+  /// 問い合わせの作成日時
+  createdAt DateTime      @default(now())
+
+  /// ステータス変更・編集時に自動更新される
+  updatedAt DateTime      @updatedAt @default(now()) ///デフォルトの値は現在時刻
+
+  /// この問い合わせに紐づくメッセージ一覧
   messages  Message[]
 }
 
 model Message {
-  id        String   @id @default(cuid())
+  /// メッセージの一意ID
+  id        String        @id @default(cuid())
+
+  /// このメッセージが所属する Thread のID
   threadId  String
-  thread    Thread   @relation(fields: [threadId], references: [id], onDelete: Cascade)
-  author    String
+
+  /// @relation: 外部キーの時に必要
+  thread    Thread        @relation(fields: [threadId], references: [id], onDelete: Cascade)
+
+  /// 発言者（USER or OWNER）
+  author    MessageAuthor
+
+  /// メッセージ本文
   body      String
-  createdAt DateTime @default(now())
+
+  /// 発言した日時
+  createdAt DateTime      @default(now())
 }
