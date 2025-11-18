@@ -7,7 +7,7 @@ import { NextResponse } from "next/server";
 // ブラウザがfetch("/api/contact", { method: "POST" })と叩いてきたら、この関数が呼ばれる
 // POST リクエストを処理する関数ですよ” という宣言↓
 export async function POST(request: Request) {
-  // フロントから送られてきたJSONをパース(受け取る)
+  // フロントから送られてきたJSONをパース(データを解析し必要なデータを取り出すこと。JSON 形式の文字列を JavaScript のデータ構造に変換する)
     const body = await request.json();
     const { name, email, message } = body; //TODO: 中身を変数に分割代入(?)
 
