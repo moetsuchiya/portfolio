@@ -1,9 +1,11 @@
+// ここでやること:
+// 問い合わせ画面の表示
+// 入力されたデータをapiに送る
+
 "use client" //クライアントコンポーネントだよ宣言
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 
 export default function ContactPage() {
-    const router = useRouter();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
@@ -36,8 +38,8 @@ export default function ContactPage() {
             console.log("slug:", data.slug);
             alert(`slug: ${data.slug}`);
 
-            // ここで router.push を使う
-            router.push(`/t/${data.slug}`);
+            // ここで router.push を使うとpendingが意味ないよ
+            // router.push(`/t/${data.slug}`);
 
             setSent(true);
 
