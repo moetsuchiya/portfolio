@@ -22,6 +22,8 @@ type AdminThread = {
     }[];
 };
 
+import ApproveRejectButtons from "./ApproveRejectButtons";
+
 // ===============================
 // メインコンポーネント（サーバーコンポーネント）
 // ===============================
@@ -110,12 +112,27 @@ export default async function AdminThreadsPage() {
                         {t.messages[0]?.body ?? "（メッセージなし）"}
                     </p>
 
-                    {/* あとで追加するスペース（承認/却下ボタンなど） */}
-                    {/* <div className="mt-3 flex gap-2">
-                        <button>承認</button>
-                        <button>拒否</button>
-                        </div>
-                      */}
+                    <div className="mt-3 flex gap-2">
+                    <button
+                        className="px-3 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700"
+                        onClick={() => {
+                            // TODO: 承認API呼び出しをここに書く（status を APPROVED にする）
+                            console.log("承認ボタンがクリックされました:", t.id);
+                        }}
+                    >
+                        承認
+                    </button>
+                    <button
+                        className="px-3 py-1 text-xs rounded bg-gray-300 text-gray-800 hover:bg-gray-400"
+                        onClick={() => {
+                            // TODO: 却下API呼び出しをここに書く（status を REJECTED にする）
+                            console.log("却下ボタンがクリックされました:", t.id);
+                        }}
+                    >
+                        却下
+                    </button>
+                    </div>
+
                 </div>
             ))}
         </div>
