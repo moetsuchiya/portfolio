@@ -36,7 +36,7 @@ export async function GET() {
                 },
             },
         });
-        // JSONとして返す
+        //NOTE JSONとして返す...?jsonでいいのか
         return NextResponse.json(threads);
     } catch (error) {
         console.error("GET /api/admin/threads error:", error);

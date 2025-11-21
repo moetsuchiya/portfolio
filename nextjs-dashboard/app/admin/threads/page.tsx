@@ -1,7 +1,7 @@
 // ===============================
 // 管理者用画面 (/admin/threads)サーバーサイドコンポーネントです
 // ===============================
-// 目的：
+// 目的：GET
 // ・ユーザーから来た問い合わせ（Thread）一覧を表示する
 // ・今回は PENDING のものだけを対象
 // ・この画面が管理作業の“入り口”になる
@@ -36,6 +36,8 @@ export default async function AdminThreadsPage() {
     // ・cache: "no-store" → 毎回最新のデータを取りたい
     //   管理画面なのでキャッシュすると困る
     // ---------------------------------------------
+
+    // fetchのデフォルトは"GET"なのでmethodを指定する必要なし。
     const res = await fetch("http://localhost:3000/api/admin/threads", {
         cache: "no-store",
     });

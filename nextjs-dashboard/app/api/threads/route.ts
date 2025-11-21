@@ -28,8 +28,6 @@ function generateSlug() {
 
 // ===============================
 // POST リクエストを受け取る
-// フロントの fetch("/api/threads", { method: "POST" }) が
-// ここに届く
 // ===============================
 export async function POST(req: Request) {
     try {
