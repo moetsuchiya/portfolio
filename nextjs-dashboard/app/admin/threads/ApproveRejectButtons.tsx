@@ -1,3 +1,6 @@
+// ===============================
+// 管理画面でのstatus更新用ui
+// ===============================
 "use client"
 
 import { useRouter } from "next/navigation";

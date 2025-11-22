@@ -1,5 +1,11 @@
 // ===============================
-// 管理者用画面 (/admin/threads)サーバーサイドコンポーネントです
+// 管理画面ページ(get)
+// ===============================
+// サーバーコンポーネント(UIコンポーネント)
+//「DBアクセスは /api/admin/threads に任せる」
+//「UIは API の JSON を受け取るだけ」
+//「そのため UI は JSON の型だけ知っていればよい」
+
 // ===============================
 // 目的：GET
 // ・ユーザーから来た問い合わせ（Thread）一覧を表示する
@@ -8,7 +14,7 @@
 // ・1ページ内で全て完結させる想定（詳細ページは作らない）
 // ===============================
 
-// --- Prisma の返却データの型をざっくり定義 ---
+//NOTE --- Prisma の返却データの型をざっくり定義 ---
 // ※ PrismaClient を使わず fetch で JSON を取るので、
 //   必要なフィールドだけ TypeScript 型を作っている。
 type AdminThread = {
@@ -57,7 +63,7 @@ export default async function AdminThreadsPage() {
     }
 
     // JSON → JS配列へ変換
-    // threads: AdminThread[] という型で扱える
+    //NOTE threads: AdminThread[] という型で扱える
     const threads: AdminThread[] = await res.json();
 
     // ===============================
@@ -79,7 +85,7 @@ export default async function AdminThreadsPage() {
 
             {/* -------------------------------
                 問い合わせカードの一覧描画
-                threads.map(...) で1件ずつカードを作る
+                map関数でthreads の中身をループし、各問い合わせ1件ごとにカードを1個生成
               ------------------------------- */}
             {threads.map((t) => (
                 <div
@@ -115,24 +121,8 @@ export default async function AdminThreadsPage() {
                     </p>
 
                     <div className="mt-3 flex gap-2">
-                    <button
-                        className="px-3 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700"
-                        onClick={() => {
-                            // TODO: 承認API呼び出しをここに書く（status を APPROVED にする）
-                            console.log("承認ボタンがクリックされました:", t.id);
-                        }}
-                    >
-                        承認
-                    </button>
-                    <button
-                        className="px-3 py-1 text-xs rounded bg-gray-300 text-gray-800 hover:bg-gray-400"
-                        onClick={() => {
-                            // TODO: 却下API呼び出しをここに書く（status を REJECTED にする）
-                            console.log("却下ボタンがクリックされました:", t.id);
-                        }}
-                    >
-                        却下
-                    </button>
+                    {/* 下段：ボタン */}
+                    <ApproveRejectButtons threadId={t.id} />
                     </div>
 
                 </div>
