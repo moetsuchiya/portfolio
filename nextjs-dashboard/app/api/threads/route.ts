@@ -14,7 +14,7 @@ import { PrismaClient, MessageAuthor } from "../../../generated/prisma";
 // PrismaClientの初期化（DBと通信する窓口 接続ハブ）
 const prisma = new PrismaClient();
 
-// フロント側から来る JSON の型
+// フロント側から来る JSON の型。型の定義であって注釈(型定義aka設計書を使うこと)ではない。
 type RequestBody = {
     name: string;
     email: string;
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
         //JSON 形式の文字列を JavaScript のデータ構造に変換する)
         //    { name, email, body } に分解
         // -----------------------------------------------
-        const { name, email, body}: RequestBody = await req.json(); //TODO: 中身を変数に分割代入(?)
+        const { name, email, body }: RequestBody = await req.json();
 
         // バリデーション
         if (!name || !email || !body) {

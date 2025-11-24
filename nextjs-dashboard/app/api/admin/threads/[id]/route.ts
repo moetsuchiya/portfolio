@@ -14,17 +14,23 @@ import { PrismaClient, ThreadStatus } from "@/generated/prisma";
 // PrismaClient を初期化（DB への窓口）
 const prisma = new PrismaClient();
 
+//NOTE 分割代入と型注釈を同時に
+// params: Next.js が自動で渡してくれる「URL の動的パラメータをまとめたオブジェクト」です。
+export async function GET(_req: Request, { params }: { params: { id: string } }) {
+    const thread = await prisma.thread.findUnique({
+        where: { id: params.id },
+        include: { messages: { orderBy: { createdAt: "asc" }}},
+    });
+    // 見つからなければ 404
+    // 見つかれば NextResponse.json(thread)
+}
+
 export async function PATCH(
     req: Request,
-    { params }: { params: Promise<{ id: string }> } // ← Promise にしておく
+    { params }: { params: Promise<{ id: string }> } // ← Promise にしておく。URLの [id] 部分がここに入る
 ) {
     // params を await してから id を取り出す
     const { id } = await params;
-
-//    req: Request,
-//    context: { params: { id: string } } // URLの [id] 部分がここに入る
-//) {
-//    const { params } = context;
 
     try {
         // リクエストボディから newStatus を取り出す
