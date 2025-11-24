@@ -14,6 +14,7 @@
 // ・1ページ内で全て完結させる想定（詳細ページは作らない）
 // ===============================
 
+import Link from "next/link";
 //NOTE --- Prisma の返却データの型をざっくり定義 ---
 // ※ PrismaClient を使わず fetch で JSON を取るので、
 //   必要なフィールドだけ TypeScript 型を作っている。
@@ -124,7 +125,6 @@ export default async function AdminThreadsPage() {
                     {/* 下段：ボタン */}
                     <ApproveRejectButtons threadId={t.id} />
                     </div>
-
                 </div>
             ))}
         </div>
