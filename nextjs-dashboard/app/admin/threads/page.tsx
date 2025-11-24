@@ -1,129 +1,208 @@
+// このページはクライアントでクエリパラメータを見ながら API を叩いて描画する
+"use client";
 // ===============================
-// 管理画面ページ(get)
+// 管理画面ページ (一覧表示)
 // ===============================
-// サーバーコンポーネント(UIコンポーネント)
-//「DBアクセスは /api/admin/threads に任せる」
-//「UIは API の JSON を受け取るだけ」
-//「そのため UI は JSON の型だけ知っていればよい」
-
-// ===============================
-// 目的：GET
-// ・ユーザーから来た問い合わせ（Thread）一覧を表示する
-// ・今回は PENDING のものだけを対象
-// ・この画面が管理作業の“入り口”になる
-// ・1ページ内で全て完結させる想定（詳細ページは作らない）
+// 役割：
+// ・status（PENDING / APPROVED / REJECTED）ごとに問い合わせ一覧を表示
+// ・PENDING → 承認/却下ボタンを表示
+// ・APPROVED → チャット画面へのリンクを表示
+// ・REJECTED → 表示のみ
 // ===============================
 
 import Link from "next/link";
-//NOTE --- Prisma の返却データの型をざっくり定義 ---
-// ※ PrismaClient を使わず fetch で JSON を取るので、
-//   必要なフィールドだけ TypeScript 型を作っている。
+import ApproveRejectButtons from "./ApproveRejectButtons";
+import { ThreadStatus } from "@/generated/prisma";
+import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+
+// --- このページで扱う Thread の型 ---
+// Prisma の Thread + messages をそのまま使うイメージ
 type AdminThread = {
-    id: string; // Thread のユニークID（cuid）
-    name: string; // 問い合わせ者の名前
-    email: string; // メールアドレス
-    createdAt: string; // いつ作られたか（日時）
+    id: string;
+    name: string;
+    email: string;
+    createdAt: string;
+    status: ThreadStatus;
     messages: {
         id: string;
-        body: string; // メッセージ本文
+        body: string;
+        createdAt: string;
     }[];
 };
 
-import ApproveRejectButtons from "./ApproveRejectButtons";
+// status 表示用の日本語ラベル
+const STATUS_LABEL: Record<AdminThread["status"], string> = {
+    PENDING: "PENDING（未承認）",
+    APPROVED: "APPROVED（承認済み）",
+    REJECTED: "REJECTED（対応しない）",
+};
+
+// タブの表示順
+const STATUS_ORDER: AdminThread["status"][] = [
+    "PENDING",
+    "APPROVED",
+    "REJECTED",
+];
 
 // ===============================
-// メインコンポーネント（サーバーコンポーネント）
+// メインコンポーネント
 // ===============================
-export default async function AdminThreadsPage() {
-    // ---------------------------------------------
-    // NOTE API（/api/admin/threads）を叩いてデータを取得
-    // ---------------------------------------------
-    // ・サーバーコンポーネントから fetch する場合、
-    //   完全な URL が必要（localhost を入れる）
-    // ・cache: "no-store" → 毎回最新のデータを取りたい
-    //   管理画面なのでキャッシュすると困る
-    // ---------------------------------------------
+export default function AdminThreadsPage() {
+    const searchParams = useSearchParams();
 
-    // fetchのデフォルトは"GET"なのでmethodを指定する必要なし。
-    const res = await fetch("http://localhost:3000/api/admin/threads", {
-        cache: "no-store",
-    });
+    // NOTE: URL の ?status= から現在のステータスを取得
+    // 例 /admin/threads?status=APPROVED
+    const currentStatus: AdminThread["status"] = useMemo(() => {
+        const rawStatus = (searchParams.get("status") ?? "PENDING").toUpperCase();
+        return rawStatus === "APPROVED" || rawStatus === "REJECTED"
+            ? (rawStatus as AdminThread["status"])
+            : "PENDING";
+    }, [searchParams]);
 
-    // API が成功しなかった場合の早期 return
-    if (!res.ok) {
-        return (
-            <div className="p-6">
-                <h1 className="text-2xl font-semibold mb-4">
-                    お問い合わせ（PENDING）
-                </h1>
-                <p className="text-red-600">
-                    データの取得に失敗しました。（APIがエラーを返しました）
-                </p>
-            </div>
-        );
-    }
+    const [threads, setThreads] = useState<AdminThread[]>([]);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState<boolean>(false);
 
-    // JSON → JS配列へ変換
-    //NOTE threads: AdminThread[] という型で扱える
-    const threads: AdminThread[] = await res.json();
+    // -------------------------------
+    // API 経由で現在のステータスの Thread 一覧を取得
+    // -------------------------------
+    useEffect(() => {
+        let cancelled = false;
+        async function load() {
+            setLoading(true);
+            setError(null);
+            try {
+                const res = await fetch(`/api/admin/threads?status=${currentStatus}`, {
+                    cache: "no-store",
+                });
+                if (!res.ok) {
+                    throw new Error("fetch failed");
+                }
+                const data = await res.json();
+                if (!cancelled) {
+                    setThreads(data);
+                }
+            } catch (err) {
+                if (!cancelled) {
+                    setError("データ取得に失敗しました");
+                }
+            } finally {
+                if (!cancelled) {
+                    setLoading(false);
+                }
+            }
+        }
+        load();
+        return () => {
+            cancelled = true;
+        };
+    }, [currentStatus]);
 
     // ===============================
-    // 画面の描画
+    // 画面表示
     // ===============================
     return (
-        <div className="max-w-3xl mx-auto p-6 space-y-4">
-            {/* ページタイトル */}
-            <h1 className="text-2xl font-semibold mb-4">
-                お問い合わせ（PENDING）
-            </h1>
+        // status が変わったら必ずコンポーネントを作り直すための key
+        <div key={currentStatus} className="max-w-3xl mx-auto p-6 space-y-6">
+            {/* デバッグ用：現在のステータスを表示 */}
+            <p className="text-xs text-gray-500">
+                現在のステータス: {currentStatus}
+            </p>
+            {/* タイトル */}
+            <h1 className="text-2xl font-semibold">お問い合わせ一覧</h1>
 
-            {/* 問い合わせが0件のとき */}
-            {threads.length === 0 && (
+            {/* ===============================
+                ステータス切り替えタブ
+            =============================== */}
+            <div className="flex gap-3 text-sm">
+                {STATUS_ORDER.map((status) => {
+                    const isActive = status === currentStatus;
+                    return (
+                        <Link
+                            key={status}
+                            href={`/admin/threads?status=${status}`}
+                            className={
+                                "px-3 py-1 rounded-full border text-xs " +
+                                (isActive
+                                    ? "bg-black text-white border-black"
+                                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50")
+                            }
+                        >
+                            {STATUS_LABEL[status]}
+                        </Link>
+                    );
+                })}
+            </div>
+
+            {/* ===============================
+                空状態の文言やエラー/ローディング
+            =============================== */}
+            {loading && (
+                <p className="text-gray-600 text-sm">読み込み中...</p>
+            )}
+            {error && (
+                <p className="text-red-600 text-sm">{error}</p>
+            )}
+            {!loading && !error && threads.length === 0 && (
                 <p className="text-gray-600 text-sm">
-                    現在、新しい問い合わせはありません。
+                    現在、このステータスの問い合わせはありません。
                 </p>
             )}
 
-            {/* -------------------------------
-                問い合わせカードの一覧描画
-                map関数でthreads の中身をループし、各問い合わせ1件ごとにカードを1個生成
-              ------------------------------- */}
+            {/* ===============================
+                一覧（カード表示）
+            =============================== */}
             {threads.map((t) => (
                 <div
                     key={t.id}
                     className="border rounded p-4 bg-white shadow-sm hover:shadow-md transition"
                 >
-                    {/* ------------------------------
-                        上段：名前・メール・受付日時・ステータス
-                       ------------------------------ */}
+                    {/* --- 上段：名前・メール・受付日時・ステータス --- */}
                     <div className="flex items-start justify-between gap-4">
-                        {/* 左側：問い合わせ者情報 */}
                         <div>
                             <p className="font-semibold text-lg">{t.name}</p>
                             <p className="text-sm text-gray-600">{t.email}</p>
-
-                            {/* createdAt は ISO文字列なので、ここでローカル形式に変換 */}
                             <p className="text-xs text-gray-500 mt-1">
                                 受付日時: {new Date(t.createdAt).toLocaleString()}
                             </p>
                         </div>
 
-                        {/* 右側：ステータスバッジ（今は全部PENDING） */}
-                        <span className="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-800">
-                            PENDING
+                        {/* ステータスバッジ */}
+                        <span
+                            className={
+                                "text-xs px-2 py-1 rounded-full " +
+                                (t.status === "PENDING"
+                                    ? "bg-yellow-100 text-yellow-800"
+                                    : t.status === "APPROVED"
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-gray-200 text-gray-700")
+                            }
+                        >
+                            {t.status}
                         </span>
                     </div>
 
-                    {/* ------------------------------
-                        下段：メッセージの抜粋（最初の1件だけ表示）
-                       ------------------------------ */}
+                    {/* --- 中段：メッセージの抜粋（最初の1件） --- */}
                     <p className="mt-3 text-sm text-gray-800">
                         {t.messages[0]?.body ?? "（メッセージなし）"}
                     </p>
 
-                    <div className="mt-3 flex gap-2">
-                    {/* 下段：ボタン */}
-                    <ApproveRejectButtons threadId={t.id} />
+                    {/* --- 下段：操作ボタン or チャットリンク --- */}
+                    <div className="mt-3 flex gap-2 items-center">
+                        {currentStatus === "PENDING" && (
+                            <ApproveRejectButtons threadId={t.id} />
+                        )}
+
+                        {/* APPROVED のときだけチャットを開ける */}
+                        {currentStatus === "APPROVED" && (
+                            <Link
+                                href={`/admin/threads/${t.id}`}
+                                className="text-xs text-blue-600 underline hover:text-blue-800"
+                            >
+                                チャットを開く
+                            </Link>
+                        )}
                     </div>
                 </div>
             ))}

@@ -51,7 +51,7 @@ export async function PATCH(
             where: {
                 // URL の /api/admin/threads/[id] の [id] をそのまま使用
                 //id: params.id,
-                id, //awiat済みのidらしい???
+                id, //TODO awiat済みのidらしい???
             },
             data: {
                 // enum ThreadStatus 型に合わせて代入

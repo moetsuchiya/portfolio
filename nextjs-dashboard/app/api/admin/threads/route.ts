@@ -1,49 +1,81 @@
 // ===============================
-// 管理画面用api
+// 管理画面用 API（一覧取得）
 // ===============================
-// 1. status = "PENDING" の Thread を一覧取得する
+// 目的：
+// 1. URLのクエリ(?status=xxx)に応じて Thread を一覧取得する
+//    - status 未指定 → "PENDING" をデフォルトにする
 // 2. Thread に紐づく messages も一緒に取得する
-//    → 管理画面1ページで完結させるため
-// 3. 管理画面 (/admin/threads) がこのAPIを叩いて表示する
+//    - 管理画面でメッセージの最初の1件を抜粋表示したいから
+// 3. 管理画面 (/admin/threads) からこのAPIを叩いて使用する
 // ===============================
 
-// Next.jsの「APIレスポンスを簡単に返すためのユーティリティ」
+// Next.js の「APIレスポンスを簡単に返すためのユーティリティ」
 import { NextResponse } from "next/server";
 
 // Prisma と enum を読み込む
 import { PrismaClient, ThreadStatus } from "@/generated/prisma";
 
-// PrismaClientを初期化（DBとの接続ハブ）
+// PrismaClient を初期化（DB と通信する窓口）
 const prisma = new PrismaClient();
 
 // ===============================
 // GET /api/admin/threads
-// 管理者が「新しい問い合わせ一覧」を見るときに呼ばれる
+// 管理者が「特定ステータスの問い合わせ一覧」を見るとき呼ばれる
 // ===============================
-
-export async function GET() {
-    try {
+export async function GET(req: Request) {
+try {
     // -------------------------------
-    // ステータスがPENDING の Thread を新着順で取得
-    // messages も全部含む
+    // URL からクエリパラメータ(status) を取得
+    // 例: /api/admin/threads?status=APPROVED
+    //
+    // searchParams.get("status") が null のときは PENDING とみなす
     // -------------------------------
-        const threads = await prisma.thread.findMany({ // findMany: 複数のデータ取得
-            where: { status: ThreadStatus.PENDING },
-            orderBy: { createdAt: "desc" }, //desc:降順(新規が上)
-            include: {
-                messages: {
-                    orderBy: { createdAt: "asc" },
-                },
-            },
-        });
-        //NOTE JSONとして返す...?jsonでいいのか
-        return NextResponse.json(threads);
-    } catch (error) {
-        console.error("GET /api/admin/threads error:", error);
+    const { searchParams } = new URL(req.url);
+    const rawStatus = (searchParams.get("status") ?? "PENDING").toUpperCase();
 
-        return NextResponse.json(
-            { error: "管理者用スレッド一覧の取得に失敗しました" },
-            { status: 500 }
-        );
-    }
+    // -------------------------------
+    // 受け取った文字列が ThreadStatus のどれかか判定するヘルパー
+    // -------------------------------
+    const isThreadStatus = (value: string): value is ThreadStatus => {
+        return Object.values(ThreadStatus).includes(value as ThreadStatus);
+    };
+
+    // -------------------------------
+    // 正常な値ならそれを使う。変な値なら PENDING にフォールバック。
+    // -------------------------------
+    const status: ThreadStatus = isThreadStatus(rawStatus)
+        ? rawStatus
+        : ThreadStatus.PENDING;
+
+    console.log("[GET /api/admin/threads] rawStatus =", rawStatus, " -> status =", status);
+
+
+//TODO null合体演算子?
+    // -------------------------------
+    // DB から該当ステータスの Thread 一覧を取得
+    // ・新着順 (createdAt desc)
+    // ・messages も all include
+    // -------------------------------
+    const threads = await prisma.thread.findMany({
+    where: { status }, // ← ここで enum ThreadStatus をそのまま渡す
+    orderBy: { createdAt: "desc" },
+    include: {
+        messages: {
+        orderBy: { createdAt: "asc" }, // メッセージは古い順に並べたい
+        },
+    },
+    });
+
+    // -------------------------------
+    // JSON として返す
+    // -------------------------------
+    return NextResponse.json(threads);
+} catch (error) {
+    console.error("GET /api/admin/threads error:", error);
+
+    return NextResponse.json(
+    { error: "管理者用スレッド一覧の取得に失敗しました" },
+    { status: 500 }
+    );
+}
 }
