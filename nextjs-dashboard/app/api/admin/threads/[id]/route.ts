@@ -16,13 +16,20 @@ const prisma = new PrismaClient();
 
 //NOTE 分割代入と型注釈を同時に
 // params: Next.js が自動で渡してくれる「URL の動的パラメータをまとめたオブジェクト」です。
-export async function GET(_req: Request, { params }: { params: { id: string } }) {
+export async function GET(
+    _req: Request,
+    { params }: { params: Promise<{ id: string }> }
+) {
+    //NOTE params を Promise 型で受け取り await してから id を使うように変更
+    const { id } = await params;
     const thread = await prisma.thread.findUnique({
-        where: { id: params.id },
+        where: { id },
         include: { messages: { orderBy: { createdAt: "asc" }}},
     });
-    // 見つからなければ 404
-    // 見つかれば NextResponse.json(thread)
+    if (!thread) {
+        return new NextResponse("Not Found", { status: 404 });
+    }
+    return NextResponse.json(thread);
 }
 
 export async function PATCH(
