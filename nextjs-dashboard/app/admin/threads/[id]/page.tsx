@@ -32,15 +32,16 @@ type AdminThreadDetail = {
 //   例: /admin/threads/abc123 → params.id === "abc123"
 export default async function AdminThreadDetailPage(
     // NOTE: 分割代入と型注釈を同時に書いている
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
     // ============================
     // 1. API を叩いて Thread の詳細を取得
     // ============================
     // - /api/admin/threads/[id] の GET を呼び出す
     // - cache: "no-store" → 毎回最新の内容を取得（チャットなので必須）
     const res = await fetch(
-        `http://localhost:3000/api/admin/threads/${params.id}`,
+        `http://localhost:3000/api/admin/threads/${id}`,
         {
             cache: "no-store",
         }
