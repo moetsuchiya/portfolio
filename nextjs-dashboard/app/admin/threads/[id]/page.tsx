@@ -9,9 +9,12 @@
 // ・この後に「管理者の送信フォーム（メッセージ投稿）」を足していく予定
 // ===============================
 
+import { AdminReplyForm } from "./AdminReplyForm";
+
 // API（GET /api/admin/threads/[id]）から返ってくる Thread 詳細の型
 type AdminThreadDetail = {
     id: string;
+    slug: string;
     name: string;
     email: string;
     status?: string;
@@ -103,6 +106,7 @@ export default async function AdminThreadDetailPage(
             <section className="border rounded-lg bg-white shadow-sm p-4 space-y-2">
                 {/* 問い合わせ者の名前・メールアドレス */}
                 <p className="text-lg font-semibold">{thread.name}</p>
+                <p className="text-lg font-semibold">{thread.slug}</p>
                 <p className="text-sm text-gray-700">{thread.email}</p>
 
                 {/* 受付日時（createdAt が存在する場合だけ表示） */}
@@ -175,8 +179,8 @@ export default async function AdminThreadDetailPage(
                 </div>
             </section>
 
-            {/* この下に、次のステップとして「管理者の送信フォーム」を付け足す */}
-            {/* 例: <AdminMessageForm threadId={thread.id} /> */}
+            {/* 管理者返信フォーム（クライアントコンポーネント） */}
+            <AdminReplyForm threadId={thread.id} />
         </div>
     );
 }

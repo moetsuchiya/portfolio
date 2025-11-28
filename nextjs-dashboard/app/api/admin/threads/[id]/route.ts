@@ -1,7 +1,7 @@
 // ===============================
 // 管理画面でのstatus更新用api
 // ===============================
-// PATCH /api/admin/threads/[id]
+// PATCH(部分更新用メソッド) /api/admin/threads/[id]
 // 管理画面のApproveRejectButtonsからstatus を更新するときに呼ばれる
 // 例: APPROVED / REJECTED に変更
 // ===============================
@@ -15,7 +15,7 @@ import { PrismaClient, ThreadStatus } from "@/generated/prisma";
 const prisma = new PrismaClient();
 
 //NOTE 分割代入と型注釈を同時に
-// params: Next.js が自動で渡してくれる「URL の動的パラメータをまとめたオブジェクト」です。
+// params: Next.js が自動で渡してくれる「URL の動的パラメータをまとめたオブジェクト」
 export async function GET(
     _req: Request,
     { params }: { params: Promise<{ id: string }> }
