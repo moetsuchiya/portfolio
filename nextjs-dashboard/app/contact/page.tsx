@@ -6,7 +6,7 @@
 // ===============================
 
 // クライアントコンポーネント(ブラウザ側で動くコンポーネント)だよ宣言
-// useStateを使うために必要な宣言
+// useState等を使うために必要な宣言
 "use client"
 
 import { useState } from "react";
@@ -19,11 +19,11 @@ export default function ContactPage() {
     const [email, setEmail] = useState("");
     const [message, setMessage] = useState("");
 
-    // API送信後の状態管理
+    // APIに送信後の状態管理
     const [sent, setSent] = useState(false);      // 送信完了画面用
     const [loading, setLoading] = useState(false); //送信中ボタンの制御
     const [error, setError] = useState<string | null>(null);
-    //<string | null>: TypeScriptの型注釈。状態変数が「文字列型 (string)」または「null型」
+    //NOTE <string | null>: TypeScriptの型注釈。状態変数が「文字列型 (string)」または「null型」
 
     // ===============================
     // フォーム送信時の処理
@@ -45,9 +45,9 @@ export default function ContactPage() {
                 headers: {
                     "Content-Type": "application/json", //NOTE: HTTPリクエストにつけるヘッダー
                 },
+                body: JSON.stringify({ name, email, body: message }),
                 //フロントでの変数名はmessageにしてるけど、バックエンド側ではbodyなので名前を合わせる
                 // "APIが欲しいキー名": フロントの変数
-                body: JSON.stringify({ name, email, body: message }),
             });
 
             // API の戻り値slugを JSON として"取得"
@@ -62,12 +62,12 @@ export default function ContactPage() {
             // この slug がチャットページのURLになる
             // -------------------------------------------
             console.log("slug:", data.slug);
-            alert(`slug: ${data.slug}`);
+            alert(`送信成功！slug: ${data.slug}`);
 
 
             // ここで router.push(`/t/${data.slug}`) すると
             // pendingのチェックなしでチャット画面に飛んでしまうので、
-            // 一旦ここでは遷移せず「送信完了画面」を見せている
+            // ここでは遷移せず「送信完了画面」を見せる
             setSent(true);
 
         } catch (err: any) {
