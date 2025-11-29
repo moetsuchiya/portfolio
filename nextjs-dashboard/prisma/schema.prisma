@@ -37,7 +37,7 @@ model Thread {
   /// スレッド（問い合わせ）の一意ID
   id        String        @id @default(cuid())
 
-  /// ユーザーへ送るチャットページのURL識別子（例: /t/xxxx）
+  /// ユーザーへ送るチャットページのURL識別子（例: /t/xxxx）ユニーク制約付き
   slug      String        @unique
 
   /// 問い合わせユーザーの名前

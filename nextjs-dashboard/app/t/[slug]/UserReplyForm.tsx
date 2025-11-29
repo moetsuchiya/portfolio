@@ -1,14 +1,13 @@
 // ===============================
-// 管理者用：返信フォームコンポーネント（クライアント側）
+// ユーザー用：チャット返信フォーム（クライアント側）
 // ===============================
 // 役割：
-// ・管理者が Thread（/admin/threads/[id]） へ返信するためのフォーム部分
-// ・入力テキストを useState で管理し、POST API に送信する
-// ・送信成功後は router.refresh() を使って、サーバーコンポーネント側の
-//   メッセージ一覧を自動再取得して最新状態に更新する
-// ・page.tsx（サーバーコンポーネント）とは分離し、ここだけ "use client"
-//   でイベント処理と状態管理を担当する
+// ・ユーザーが Thread（/t/[slug]）に対してメッセージ返信するためのフォーム。
+// ・props で渡された threadSlug（Thread.slug）を使って、
+//   POST /api/threads/[slug]/messages にメッセージを送信する。
+// ・送信成功後は router.refresh() で /t/[slug] ページのメッセージ一覧を再取得する。
 // ===============================
+
 
 "use client";
 // このコンポーネントはブラウザ側（クライアント）で動く必要がある。
@@ -17,7 +16,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export function AdminReplyForm({ threadId }: { threadId: string }) {
+export function UserReplyForm({ threadSlug }: { threadSlug: string }) {
     // -------------------------------------
     // ▼ フォームの状態管理（クライアント側で保持）
     // -------------------------------------
@@ -37,7 +36,7 @@ export function AdminReplyForm({ threadId }: { threadId: string }) {
 
     // ===============================
     // ▼ フォーム送信ハンドラ
-    //    管理者がメッセージを送ると呼ばれる
+    //    "ユーザー"がメッセージを送ると呼ばれる
     // ===============================
     async function handleSubmit(e: React.FormEvent) {
         e.preventDefault();
@@ -57,10 +56,10 @@ export function AdminReplyForm({ threadId }: { threadId: string }) {
 
         try {
             // -------------------------------
-            // ■ 管理者返信APIへリクエスト送信
-            //    POST /api/admin/threads/[id]/messages
+            // ■ ユーザー用返信APIへリクエスト送信
+            //    POST /api/threads/[slug]/messages
             // -------------------------------
-            const res = await fetch(`/api/admin/threads/${threadId}/messages`, {
+            const res = await fetch(`/api/threads/${threadSlug}/messages`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -81,7 +80,7 @@ export function AdminReplyForm({ threadId }: { threadId: string }) {
                         message = data.error; // APIからのエラー文を採用
                     }
                 } catch {
-                    // JSONで返ってこなかった場合は無視
+                    // JSONでない場合は無視
                 }
                 throw new Error(message);
             }
@@ -90,10 +89,11 @@ export function AdminReplyForm({ threadId }: { threadId: string }) {
             // ■ 成功時の処理
             // -------------------------------
 
+            // 成功したら入力欄をリセット
             setBody("");
-            // フォームを初期化
 
             // 最新メッセージ一覧を再取得
+            // 最新メッセージを再取得（/t/[slug] のサーバーコンポーネントが再実行される）
             // → サーバー側の page.tsx がもう一度実行され最新状態に
             router.refresh();
 
@@ -113,7 +113,7 @@ export function AdminReplyForm({ threadId }: { threadId: string }) {
 
 
     // ===============================
-    // ▼ フォーム UI（ユーザーに見える部分）
+    // ▼ フォーム UI
     // ===============================
     return (
         <form
@@ -126,7 +126,7 @@ export function AdminReplyForm({ threadId }: { threadId: string }) {
                 onChange={(e) => setBody(e.target.value)}
                 className="w-full border rounded p-2"
                 rows={3}
-                placeholder="管理者として返信を書く…"
+                placeholder="ユーザーとして返信を書く…"
             />
 
             <div className="flex items-center gap-2">
