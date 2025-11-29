@@ -9,9 +9,11 @@
 // ・まずは「読むだけ」の画面として実装し、
 //   後でユーザー用の送信フォームを別コンポーネントとして足していく想定
 // ===============================
+import { UserReplyForm } from "./UserReplyForm";
 
 type UserThreadDetail = {
     id: string;
+    slug: string;
     name: string;
     email: string;
     status?: string;
@@ -38,9 +40,6 @@ export default async function UserThreadPage(
     // ============================
     // 1. API を叩いて Thread の詳細を取得
     // ============================
-    // NOTE:
-    //   - API のパスはあなたの実装に合わせて変更してください。
-    //   - 例: /api/threads/[slug] や /api/user/threads/[slug] など。
     const res = await fetch(
         `http://localhost:3000/api/threads/${slug}`,
         {
@@ -77,7 +76,7 @@ export default async function UserThreadPage(
     }
 
     // ============================
-    // 3. JSON → JSオブジェクトに変換して型を付ける
+    //TODO 3. API の戻り値　JSON → JSオブジェクトに変換して型を付ける
     // ============================
     const thread: UserThreadDetail = await res.json();
 
@@ -168,11 +167,8 @@ export default async function UserThreadPage(
                     })}
                 </div>
             </section>
+            <UserReplyForm threadSlug={thread.slug} />
 
-            {/* ★ ここに後で「ユーザー用送信フォーム」を足す予定
-                例:
-                <UserReplyForm threadId={thread.id} />
-            */}
         </div>
     );
 }

@@ -70,7 +70,7 @@ export default function AdminThreadsPage() {
     const [loading, setLoading] = useState<boolean>(false);
     const [flashMessage, setFlashMessage] = useState<string | null>(null);
 
-    // ステータス更新後の一時的なメッセージ。数秒で消す
+    // ステータス更新完了の一時的なメッセージ。数秒で消す
     useEffect(() => {
         if (!flashMessage) return;
         const timer = setTimeout(() => setFlashMessage(null), 3000);
@@ -184,7 +184,7 @@ export default function AdminThreadsPage() {
             {/* ===============================
                 一覧（カード表示）
             =============================== */}
-            {threads.map((t) => (
+            {threads.map((t) => ( //TODO map関数???
                 <div
                     key={t.id}
                     className="border rounded p-4 bg-white shadow-sm hover:shadow-md transition"
