@@ -105,9 +105,9 @@ export default async function AdminThreadDetailPage(
             {/* Thread の基本情報カード */}
             <section className="border rounded-lg bg-white shadow-sm p-4 space-y-2">
                 {/* 問い合わせ者の名前・メールアドレス */}
-                <p className="text-lg font-semibold">{thread.name}</p>
-                <p className="text-lg font-semibold">{thread.slug}</p>
-                <p className="text-sm text-gray-700">{thread.email}</p>
+                <p className="text-lg font-semibold">{thread.name}様とのお問合せチャット</p>
+                <p className="text-lg font-semibold">slug: {thread.slug}</p>
+                <p className="text-sm text-gray-700">email: {thread.email}</p>
 
                 {/* 受付日時（createdAt が存在する場合だけ表示） */}
                 {thread.createdAt && (
@@ -138,8 +138,8 @@ export default async function AdminThreadDetailPage(
                 {/* メッセージがある場合は、1件ずつチャット風に表示 */}
                 <div className="space-y-2">
                     {thread.messages.map((m) => {
-                        // author が "OWNER" の場合 → 管理者側の吹き出しとして右寄せ
-                        // それ以外（"USER" or undefined）の場合 → ユーザー側として左寄せ
+                        //TODO author が "OWNER" の場合 → 管理者側の吹き出しとして右寄せ
+                        //TODO それ以外（"USER" or undefined）の場合 → ユーザー側として左寄せ
                         const isOwner = m.author === "OWNER";
 
                         return (
@@ -169,7 +169,7 @@ export default async function AdminThreadDetailPage(
                                     {/* 送り手のラベル（管理者 / ユーザー） */}
                                     {m.author && (
                                         <p className="mt-0.5 text-[10px] opacity-70">
-                                            {m.author === "OWNER" ? "管理者" : "ユーザー"}
+                                            by {m.author === "OWNER" ? "管理者" : "ユーザー"}
                                         </p>
                                     )}
                                 </div>

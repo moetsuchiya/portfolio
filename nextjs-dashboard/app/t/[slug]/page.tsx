@@ -6,8 +6,6 @@
 // ・params.slug を使って、対象の Thread を API から取得する
 // ・Thread の基本情報（名前・受付日時 など）と、
 //   紐づくメッセージ一覧をチャット風に表示する
-// ・まずは「読むだけ」の画面として実装し、
-//   後でユーザー用の送信フォームを別コンポーネントとして足していく想定
 // ===============================
 import { UserReplyForm } from "./UserReplyForm";
 
@@ -16,7 +14,7 @@ type UserThreadDetail = {
     slug: string;
     name: string;
     email: string;
-    status?: string;
+    status?: "PENDING" | "APPROVED" | "REJECTED";
     createdAt?: string;
     messages: {
         id: string;
@@ -83,6 +81,22 @@ export default async function UserThreadPage(
     // ============================
     // 4. 画面表示
     // ============================
+    const isPending = thread.status === "PENDING";
+
+    // 承認待ちの場合は案内のみ表示
+    if (isPending) {
+        return (
+            <div className="max-w-xl mx-auto p-6 space-y-4">
+                <header className="space-y-1">
+                    <h1 className="text-xl font-semibold">お問い合わせチャット</h1>
+                </header>
+                <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                    管理者が承認するまでお待ちください
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="max-w-xl mx-auto p-6 space-y-6">
             {/* 上部ヘッダー部分 */}
@@ -92,11 +106,10 @@ export default async function UserThreadPage(
                     こちらのページから、過去のお問い合わせと管理者からの返信を確認できます。
                 </p>
             </header>
-
             {/* Thread の基本情報カード */}
             <section className="border rounded-lg bg-white shadow-sm p-4 space-y-2">
                 {/* お問い合わせ者の名前 */}
-                <p className="text-lg font-semibold">{thread.name} 様</p>
+                <p className="text-lg font-semibold">{thread.name}様のお問合せチャット</p>
 
                 {/* 受付日時（createdAt が存在する場合だけ表示） */}
                 {thread.createdAt && (
@@ -108,7 +121,7 @@ export default async function UserThreadPage(
                 {/* ステータス（任意） */}
                 {thread.status && (
                     <p className="text-xs inline-flex items-center px-2 py-1 rounded-full bg-gray-100 text-gray-700 mt-1">
-                        現在のステータス: {thread.status}
+                        Status: {thread.status}
                     </p>
                 )}
             </section>
@@ -158,7 +171,7 @@ export default async function UserThreadPage(
                                     {/* 送り手ラベル（任意） */}
                                     {m.author && (
                                         <p className="mt-0.5 text-[10px] opacity-70">
-                                            {m.author === "USER" ? "あなた" : "管理者"}
+                                            by {m.author === "USER" ? "あなた" : "管理者"}
                                         </p>
                                     )}
                                 </div>
@@ -167,6 +180,7 @@ export default async function UserThreadPage(
                     })}
                 </div>
             </section>
+
             <UserReplyForm threadSlug={thread.slug} />
 
         </div>

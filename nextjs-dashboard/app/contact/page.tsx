@@ -9,6 +9,7 @@
 // useState等を使うために必要な宣言
 "use client"
 
+import Link from "next/link";
 import { useState } from "react";
 
 export default function ContactPage() {
@@ -23,6 +24,7 @@ export default function ContactPage() {
     const [sent, setSent] = useState(false);      // 送信完了画面用
     const [loading, setLoading] = useState(false); //送信中ボタンの制御
     const [error, setError] = useState<string | null>(null);
+    const [threadSlug, setThreadSlug] = useState<string | null>(null); // 完了画面でリンクを出す用
     //NOTE <string | null>: TypeScriptの型注釈。状態変数が「文字列型 (string)」または「null型」
 
     // ===============================
@@ -62,6 +64,7 @@ export default function ContactPage() {
             // この slug がチャットページのURLになる
             // -------------------------------------------
             console.log("slug:", data.slug);
+            setThreadSlug(data.slug);
             alert(`送信成功！slug: ${data.slug}`);
 
 
@@ -82,53 +85,61 @@ export default function ContactPage() {
     // 送信後の完了画面
     // ===============================
     if (sent) {
-    return (
-    <div className="max-w-xl mx-auto p-6">
-    <h1 className="text-2xl font-semibold mb-4">Contact</h1>
-    <p className="text-green-600">送信ありがとうございました！（今は仮処理）</p>
-    </div>
-);
-}
-
-
-// ===============================
-// 初期表示：Contact フォーム
-// ===============================
-return (
-<div className="max-w-xl mx-auto p-6">
-    <h1 className="text-2xl font-semibold mb-4">Contact</h1>
-
-    {error && <p className="text-red-600 mb-2">{error}</p>}
-
-    <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-    <input
-        type="text"
-        placeholder="お名前"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        className="border p-2 rounded"
-    />
-    <input
-        type="email"
-        placeholder="メールアドレス"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        className="border p-2 rounded"
-    />
-    <textarea
-        placeholder="メッセージ"
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
-        className="border p-2 rounded h-32"
-    />
-    <button
-        type="submit"
-        disabled={loading}
-        className="bg-black text-white px-4 py-2 rounded disabled:opacity-60"
-    >
-        {loading ? "送信中..." : "送信する（仮）"}
-        </button>
-    </form>
-</div>
-);
+        return (
+            <div className="max-w-xl mx-auto p-6">
+                <h1 className="text-2xl font-semibold mb-4">Contact</h1>
+                <p className="text-green-600 mb-4">送信ありがとうございました！（今は仮処理）</p>
+                {threadSlug && (
+                    <Link
+                        href={`/t/${threadSlug}`}
+                        className="text-blue-600 underline underline-offset-2"
+                    >
+                        お問合せチャット画面（thread）へ移動
+                    </Link>
+                )}
+            </div>
+        );
     }
+
+
+    // ===============================
+    // 初期表示：Contact フォーム
+    // ===============================
+    return (
+        <div className="max-w-xl mx-auto p-6">
+            <h1 className="text-2xl font-semibold mb-4">Contact</h1>
+
+            {error && <p className="text-red-600 mb-2">{error}</p>}
+
+            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <input
+                    type="text"
+                    placeholder="お名前"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="border p-2 rounded"
+                />
+                <input
+                    type="email"
+                    placeholder="メールアドレス"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="border p-2 rounded"
+                />
+                <textarea
+                    placeholder="メッセージ"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="border p-2 rounded h-32"
+                />
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className="bg-black text-white px-4 py-2 rounded disabled:opacity-60"
+                >
+                    {loading ? "送信中..." : "送信する（仮）"}
+                </button>
+            </form>
+        </div>
+    );
+}
