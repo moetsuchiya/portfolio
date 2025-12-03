@@ -8,21 +8,8 @@
 //   紐づくメッセージ一覧をチャット風に表示する
 // ===============================
 import { UserReplyForm } from "./UserReplyForm";
-
-type UserThreadDetail = {
-    id: string;
-    slug: string;
-    name: string;
-    email: string;
-    status?: "PENDING" | "APPROVED" | "REJECTED";
-    createdAt?: string;
-    messages: {
-        id: string;
-        author?: "USER" | "OWNER"; // メッセージの送り手（ユーザー or 管理者）
-        body: string;              // メッセージ本文
-        createdAt?: string;
-    }[];
-};
+import { ThreadMessages } from "./ThreadMessages";
+import { UserThreadDetail } from "./types";
 
 // ===============================
 // ページコンポーネント本体（サーバーコンポーネント）
@@ -97,92 +84,126 @@ export default async function UserThreadPage(
         );
     }
 
+    const contactEmail = 'your.email@example.com';
+
     return (
-        <div className="max-w-xl mx-auto p-6 space-y-6">
-            {/* 上部ヘッダー部分 */}
-            <header className="space-y-1">
-                <h1 className="text-xl font-semibold">お問い合わせチャット</h1>
-                <p className="text-xs text-gray-600">
-                    こちらのページから、過去のお問い合わせと管理者からの返信を確認できます。
-                </p>
-            </header>
-            {/* Thread の基本情報カード */}
-            <section className="border rounded-lg bg-white shadow-sm p-4 space-y-2">
-                {/* お問い合わせ者の名前 */}
-                <p className="text-lg font-semibold">{thread.name}様のお問合せチャット</p>
-
-                {/* 受付日時（createdAt が存在する場合だけ表示） */}
-                {thread.createdAt && (
-                    <p className="text-xs text-gray-500">
-                        お問い合わせ日時: {new Date(thread.createdAt).toLocaleString()}
+        <section className="min-h-screen px-6 py-24 pt-32">
+            <div className="max-w-4xl mx-auto">
+                 {/* Header */}
+                <div className="text-center mb-16 space-y-3">
+                    <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">Connect</p>
+                    <h2 className="font-serif italic text-[#0A2C6A] text-5xl">
+                        Let's Talk
+                    </h2>
+                    <p className="text-[#4A5C7A] mt-6 max-w-md mx-auto leading-relaxed">
+                        I'm always open to discussing new projects, creative ideas, or opportunities.
                     </p>
-                )}
-
-                {/* ステータス（任意） */}
-                {thread.status && (
-                    <p className="text-xs inline-flex items-center px-2 py-1 rounded-full bg-gray-100 text-gray-700 mt-1">
-                        Status: {thread.status}
-                    </p>
-                )}
-            </section>
-
-            {/* メッセージ一覧 */}
-            <section className="space-y-3">
-                <h2 className="text-sm font-semibold text-gray-700">
-                    メッセージ履歴
-                </h2>
-
-                {/* メッセージが1件もないとき */}
-                {thread.messages.length === 0 && (
-                    <p className="text-xs text-gray-500">
-                        まだメッセージはありません。
-                    </p>
-                )}
-
-                {/* メッセージがある場合はチャット風に表示 */}
-                <div className="space-y-2">
-                    {thread.messages.map((m) => {
-                        const isUser = m.author === "USER";
-                        // ユーザーのメッセージ：右寄せ
-                        // 管理者のメッセージ：左寄せ
-
-                        return (
-                            <div
-                                key={m.id}
-                                className={`flex ${isUser ? "justify-end" : "justify-start"}`}
-                            >
-                                <div
-                                    className={`max-w-[75%] rounded-lg px-3 py-2 text-sm shadow-sm ${
-                                        isUser
-                                            ? "bg-sky-600 text-white" // ユーザー側
-                                            : "bg-gray-100 text-gray-900" // 管理者側
-                                    }`}
-                                >
-                                    {/* メッセージ本文 */}
-                                    <p>{m.body}</p>
-
-                                    {/* 送信日時（存在する場合のみ） */}
-                                    {m.createdAt && (
-                                        <p className="mt-1 text-[10px] opacity-70 text-right">
-                                            {new Date(m.createdAt).toLocaleString()}
-                                        </p>
-                                    )}
-
-                                    {/* 送り手ラベル（任意） */}
-                                    {m.author && (
-                                        <p className="mt-0.5 text-[10px] opacity-70">
-                                            by {m.author === "USER" ? "あなた" : "管理者"}
-                                        </p>
-                                    )}
-                                </div>
-                            </div>
-                        );
-                    })}
                 </div>
-            </section>
 
-            <UserReplyForm threadSlug={thread.slug} />
+                {/* Chat Container */}
+                <div
+                    className="relative bg-white/50 backdrop-blur-md overflow-hidden"
+                    style={{
+                        boxShadow: 'inset 0 0 0 8px #0A2C6A, inset 0 0 0 12px rgba(135, 153, 189, 0.3), inset 0 0 0 13px #0A2C6A, 0 8px 32px rgba(10, 44, 106, 0.15)',
+                        padding: '20px'
+                    }}
+                >
+                    {/* Decorative frame corners */}
+                    <div className="absolute top-0 left-0 w-12 h-12" style={{ borderTop: '3px solid #8799BD', borderLeft: '3px solid #8799BD' }}></div>
+                    <div className="absolute top-0 right-0 w-12 h-12" style={{ borderTop: '3px solid #8799BD', borderRight: '3px solid #8799BD' }}></div>
+                    <div className="absolute bottom-0 left-0 w-12 h-12" style={{ borderBottom: '3px solid #8799BD', borderLeft: '3px solid #8799BD' }}></div>
+                    <div className="absolute bottom-0 right-0 w-12 h-12" style={{ borderBottom: '3px solid #8799BD', borderRight: '3px solid #8799BD' }}></div>
 
-        </div>
+                    {/* Inner frame content */}
+                    <div className="relative bg-white/30 backdrop-blur-sm" style={{ boxShadow: '0 0 0 1px rgba(135, 153, 189, 0.2)' }}>
+                        {/* Chat Header */}
+                        <div
+                            className="relative px-12 py-6"
+                            style={{ borderBottom: '0.5px solid rgba(135, 153, 189, 0.2)' }}
+                        >
+                            <div className="flex items-start justify-between">
+                                <div className="space-y-2">
+                                    <h3 className="font-serif italic text-[#0A2C6A] text-2xl">
+                                        管理者とのチャット
+                                    </h3>
+                                    <div className="flex items-center gap-4 text-xs text-[#8799BD] flex-wrap">
+                                        <span className="tracking-wide">お名前: {thread.name}様</span>
+                                        <span className="text-[#8b7d9e]">·</span>
+                                        <span className="tracking-wider">Thread ID: {thread.slug}</span>
+                                        {thread.status && (
+                                            <>
+                                                <span className="text-[#8b7d9e]">·</span>
+                                                <span className="inline-flex items-center px-2 py-1 rounded-full bg-gray-100 text-gray-700 font-medium">
+                                                    {thread.status}
+                                                </span>
+                                            </>
+                                        )}
+                                        {thread.createdAt && (
+                                            <>
+                                                <span className="text-[#8b7d9e]">·</span>
+                                                <span>
+                                                    受付: {new Date(thread.createdAt).toLocaleString('ja-JP')}
+                                                </span>
+                                            </>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="text-[#8b7d9e] opacity-40 text-2xl">✦</div>
+                            </div>
+                        </div>
+
+                        {/* Subtle watercolor texture overlay */}
+                        <div
+                            className="absolute inset-0 opacity-30 pointer-events-none"
+                            style={{
+                                backgroundImage: `radial-gradient(circle at 20% 30%, rgba(135, 153, 189, 0.1) 0%, transparent 50%),
+                                 radial-gradient(circle at 80% 70%, rgba(139, 125, 158, 0.08) 0%, transparent 50%)`
+                            }}
+                        ></div>
+
+                        {/* Messages Container */}
+                        <ThreadMessages thread={thread} />
+                        
+                        <div
+                            className="relative px-12 py-8 bg-white/20 backdrop-blur-sm"
+                            style={{ borderTop: '0.5px solid rgba(135, 153, 189, 0.25)' }}
+                        >
+                            <UserReplyForm threadSlug={thread.slug} />
+                        </div>
+                    </div>
+                </div>
+
+                 {/* Contact Info */}
+                <div className="mt-12 text-center space-y-4">
+                    <p className="text-[#8799BD] text-sm tracking-wide">Or reach me directly</p>
+                    <div className="flex flex-wrap justify-center gap-8">
+                        <a
+                        href={`mailto:${contactEmail}`}
+                        className="text-[#8799BD] hover:text-[#0A2C6A] transition-colors duration-500 tracking-wide"
+                        >
+                        {contactEmail}
+                        </a>
+                        <span className="text-[#8b7d9e]">·</span>
+                        <a
+                        href="https://github.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#8799BD] hover:text-[#0A2C6A] transition-colors duration-500 tracking-wide"
+                        >
+                        GitHub
+                        </a>
+                        <span className="text-[#8b7d9e]">·</span>
+                        <a
+                        href="https://linkedin.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[#8799BD] hover:text-[#0A2C6A] transition-colors duration-500 tracking-wide"
+                        >
+                        LinkedIn
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 }

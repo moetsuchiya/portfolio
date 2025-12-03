@@ -1,0 +1,67 @@
+"use client";
+
+import { AnimatePresence, motion } from "framer-motion";
+import { AdminThreadDetail } from "./types";
+
+type Props = {
+    thread: AdminThreadDetail;
+};
+
+export function ThreadMessages({ thread }: Props) {
+    return (
+        <div className="relative h-[560px] overflow-y-auto px-12 py-12 space-y-8">
+            {/* Decorative elements */}
+            <div className="absolute top-8 right-12 text-[#8799BD] opacity-25 text-xl">✦</div>
+            <div className="absolute top-32 left-16 text-[#8b7d9e] opacity-20 text-sm">✧</div>
+            <div className="absolute bottom-24 right-20 text-[#8799BD] opacity-25 text-lg">☽</div>
+
+            {/* メッセージが1件もないとき */}
+            {thread.messages.length === 0 && (
+                <p className="text-center text-sm text-[#8799BD]">まだメッセージはありません。</p>
+            )}
+
+            <AnimatePresence>
+                {thread.messages.map((m, index) => {
+                    const isOwner = m.author === "OWNER";
+                    return (
+                        <motion.div
+                            key={m.id}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: index * 0.1 }}
+                            className={`flex ${isOwner ? 'justify-end' : 'justify-start'}`}
+                        >
+                            <div className={`max-w-[70%] ${isOwner ? 'items-end' : 'items-start'} flex flex-col gap-2`}>
+                                <p className="text-xs text-[#8799BD] px-3 tracking-wide">
+                                    {isOwner ? "管理者" : thread.name}
+                                </p>
+
+                                <motion.div
+                                    className={`relative px-7 py-5 rounded-[28px] ${isOwner ? 'bg-[#8b7d9e]/15' : 'bg-white/70'}`}
+                                    style={{
+                                        border: isOwner ? '0.5px solid rgba(139, 125, 158, 0.35)' : '0.5px solid rgba(135, 153, 189, 0.3)',
+                                        boxShadow: '0 2px 16px rgba(10, 44, 106, 0.04)'
+                                    }}
+                                >
+                                    <p className="leading-relaxed text-[#0A2C6A]">{m.body}</p>
+                                </motion.div>
+
+                                {m.createdAt && (
+                                    <div className="flex items-center gap-3 px-3">
+                                        <p className="font-serif italic text-xs text-[#8799BD]">
+                                            {new Date(m.createdAt).toLocaleDateString('ja-JP', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                        </p>
+                                        <span className="text-[#8b7d9e] text-xs">·</span>
+                                        <p className="font-serif italic text-xs text-[#8799BD]">
+                                            {new Date(m.createdAt).toLocaleTimeString('ja-JP', { hour: 'numeric', minute: '2-digit', hour12: false })}
+                                        </p>
+                                    </div>
+                                )}
+                            </div>
+                        </motion.div>
+                    );
+                })}
+            </AnimatePresence>
+        </div>
+    );
+}
