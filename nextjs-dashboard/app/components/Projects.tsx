@@ -1,92 +1,259 @@
-import React from 'react';
+'use client';
+import React, { useState } from 'react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { ExternalLink } from 'lucide-react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Projects() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const projects = [
     {
       title: 'E-Commerce Website',
       category: 'Web Design & Development',
       description: 'モダンなECサイトのデザインと実装。レスポンシブデザインとスムーズなアニメーションが特徴です。',
-      tags: ['React', 'Tailwind', 'Animation'],
-      color: 'from-[#ffd4d4] to-[#ffb3c1]'
+      link: 'https://example.com/ecommerce',
+      image: 'https://images.unsplash.com/photo-1694599048261-a1de00f0117e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjB3ZWJzaXRlJTIwZGVzaWdufGVufDF8fHx8MTc2NDU4MTg2MXww&ixlib=rb-4.1.0&q=80&w=1080'
     },
     {
       title: 'Portfolio Design',
       category: 'UI/UX Design',
       description: 'クリエイティブなポートフォリオサイト。ユーザー体験を重視したインタラクティブなデザイン。',
-      tags: ['Figma', 'Prototyping', 'UX'],
-      color: 'from-[#c9b4d9] to-[#a78bca]'
+      link: 'https://example.com/portfolio',
+      image: 'https://images.unsplash.com/photo-1656264142377-22ae3fefdbc3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwb3J0Zm9saW8lMjB3ZWJzaXRlJTIwc2NyZWVufGVufDF8fHx8MTc2NDYwNjczM3ww&ixlib=rb-4.1.0&q=80&w=1080'
     },
     {
       title: 'Mobile App UI',
       category: 'App Design',
       description: 'モバイルファーストのアプリUIデザイン。直感的な操作性と美しいビジュアルを実現。',
-      tags: ['Mobile', 'UI Design', 'Figma'],
-      color: 'from-[#b4d9d4] to-[#8bc9c1]'
+      link: 'https://example.com/app',
+      image: 'https://images.unsplash.com/photo-1605108222700-0d605d9ebafe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBpbnRlcmZhY2V8ZW58MXx8fHwxNzY0NTgzNDMzfDA&ixlib=rb-4.1.0&q=80&w=1080'
+    },
+    {
+      title: 'Landing Page',
+      category: 'Web Design',
+      description: 'コンバージョンを意識したランディングページ。視覚的な魅力とユーザビリティを両立。',
+      link: 'https://example.com/landing',
+      image: 'https://images.unsplash.com/photo-1649150849645-92fba77775a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWJzaXRlJTIwbW9ja3VwJTIwc2NyZWVufGVufDF8fHx8MTc2NDUzMTE5M3ww&ixlib=rb-4.1.0&q=80&w=1080'
     },
     {
       title: 'Brand Identity',
       category: 'Graphic Design',
       description: '企業のブランディングデザイン。ロゴ、カラーパレット、タイポグラフィを統一。',
-      tags: ['Branding', 'Logo', 'Identity'],
-      color: 'from-[#ffd4b4] to-[#ffc18b]'
+      link: 'https://example.com/branding',
+      image: 'https://images.unsplash.com/photo-1694599048261-a1de00f0117e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjB3ZWJzaXRlJTIwZGVzaWdufGVufDF8fHx8MTc2NDU4MTg2MXww&ixlib=rb-4.1.0&q=80&w=1080'
     }
   ];
 
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % projects.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev - 1 + projects.length) % projects.length);
+  };
+
+  const getCardStyle = (offset: number) => {
+    const rotation = offset * 15; // 15 degrees per card
+    const translateX = offset * 80; // Horizontal spacing
+    const translateY = Math.abs(offset) * 30; // Cards further from center are lower
+    const scale = 1 - Math.abs(offset) * 0.15; // Cards get smaller as they move away
+    const zIndex = 10 - Math.abs(offset);
+    
+    return {
+      transform: `translateX(${translateX}px) translateY(${translateY}px) rotate(${rotation}deg) scale(${scale})`,
+      zIndex,
+      opacity: Math.abs(offset) > 2 ? 0 : 1
+    };
+  };
+
   return (
-    <section className="min-h-screen px-6 py-24 pt-32">
-      <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16 space-y-4">
-          <p className="text-[#a78bca] tracking-wide">My Work</p>
-          <h2 className="font-serif italic text-[#6b5d7a]">
+    <section className="min-h-screen px-6 py-24 pt-32 relative overflow-hidden">
+      {/* Decorative Corner Ornaments */}
+      <svg className="absolute top-8 left-8 w-24 h-24 opacity-15" viewBox="0 0 100 100" fill="none">
+        <path d="M5 5 Q10 5 15 8 Q20 12 22 18 Q24 25 24 35" stroke="#8799BD" strokeWidth="0.8" fill="none"/>
+        <circle cx="6" cy="6" r="1.5" fill="#8b7d9e" opacity="0.4"/>
+      </svg>
+      <svg className="absolute top-8 right-8 w-24 h-24 opacity-15" viewBox="0 0 100 100" fill="none" style={{ transform: 'scaleX(-1)' }}>
+        <path d="M5 5 Q10 5 15 8 Q20 12 22 18 Q24 25 24 35" stroke="#8799BD" strokeWidth="0.8" fill="none"/>
+        <circle cx="6" cy="6" r="1.5" fill="#8b7d9e" opacity="0.4"/>
+      </svg>
+
+      <div className="max-w-5xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-20 space-y-3">
+          <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">Works</p>
+          <h2 className="font-serif italic text-[#0A2C6A] text-5xl">
             Featured Projects
           </h2>
-          <p className="text-[#8b7d9e] max-w-2xl mx-auto">
+          <p className="text-[#4A5C7A] max-w-md mx-auto leading-relaxed">
             これまでに制作したプロジェクトの一部をご紹介します。
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {projects.map((project, index) => (
-            <div
-              key={index}
-              className="group relative overflow-hidden rounded-3xl bg-white border border-[#e8e4f3] hover:shadow-xl transition-all duration-300"
-            >
-              <div className={`h-48 bg-gradient-to-br ${project.color} relative overflow-hidden`}>
-                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="w-32 h-32 border-4 border-white/30 rounded-2xl rotate-12 group-hover:rotate-0 transition-transform duration-500"></div>
-                  <div className="absolute w-24 h-24 border-4 border-white/50 rounded-2xl -rotate-12 group-hover:rotate-0 transition-transform duration-500"></div>
-                </div>
-              </div>
+        {/* Card Fan Display */}
+        <div className="relative h-[600px] flex items-center justify-center mb-20">
+          <div className="relative w-full h-full flex items-center justify-center">
+            {[-2, -1, 0, 1, 2].map((offset) => {
+              const actualIndex = (currentIndex + offset + projects.length) % projects.length;
+              const project = projects[actualIndex];
               
-              <div className="p-6 space-y-4">
-                <div className="space-y-2">
-                  <p className="text-[#a78bca] text-sm tracking-wide">{project.category}</p>
-                  <h3 className="text-[#6b5d7a] flex items-center justify-between">
-                    {project.title}
-                    <ExternalLink className="w-5 h-5 text-[#a78bca] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  </h3>
-                </div>
-                
-                <p className="text-[#8b7d9e]">
-                  {project.description}
-                </p>
-                
-                <div className="flex flex-wrap gap-2 pt-2">
-                  {project.tags.map((tag, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-1 bg-[#e8e4f3] text-[#6b5d7a] rounded-full text-sm"
+              return (
+                <motion.div
+                  key={`${actualIndex}-${offset}`}
+                  className="absolute w-80 h-[480px] bg-white rounded-2xl overflow-hidden cursor-pointer"
+                  style={{
+                    ...getCardStyle(offset),
+                    border: '3px solid #0A2C6A',
+                    boxShadow: offset === 0 
+                      ? '0 12px 48px rgba(10, 44, 106, 0.25)' 
+                      : '0 4px 16px rgba(10, 44, 106, 0.12)'
+                  }}
+                  initial={false}
+                  animate={getCardStyle(offset)}
+                  transition={{
+                    duration: 0.7,
+                    ease: [0.25, 0.1, 0.25, 1]
+                  }}
+                  onClick={() => {
+                    if (offset !== 0) {
+                      offset > 0 ? handleNext() : handlePrev();
+                    }
+                  }}
+                >
+                  {/* Card Border Decoration */}
+                  <div className="absolute inset-0 pointer-events-none" style={{
+                    border: '1px solid #8799BD',
+                    margin: '8px',
+                    borderRadius: '12px'
+                  }}></div>
+
+                  {/* Project Image */}
+                  <div className="h-64 overflow-hidden relative">
+                    <ImageWithFallback
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
+                  </div>
+
+                  {/* Project Info */}
+                  <div className="p-6 space-y-4">
+                    <div className="space-y-2">
+                      <p className="text-[#8799BD] text-xs tracking-wider uppercase">
+                        {project.category}
+                      </p>
+                      <h3 className="font-serif italic text-[#0A2C6A] text-2xl">
+                        {project.title}
+                      </h3>
+                    </div>
+
+                    <p className="text-[#4A5C7A] text-sm leading-relaxed line-clamp-3">
+                      {project.description}
+                    </p>
+
+                    {/* View Project Button */}
+                    <a
+                      href={project.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-6 py-2 mt-4 text-white rounded-full transition-all duration-500"
+                      style={{
+                        background: 'linear-gradient(135deg, #8799BD 0%, #8b7d9e 100%)',
+                        boxShadow: '0 2px 12px rgba(135, 153, 189, 0.3)'
+                      }}
+                      onClick={(e) => e.stopPropagation()}
                     >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          ))}
+                      <span className="text-sm tracking-wide">View Project</span>
+                      <ExternalLink className="w-4 h-4" />
+                    </a>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Hand Navigation Buttons */}
+        <div className="flex items-center justify-center gap-16">
+          {/* Left Hand Button */}
+          <motion.button
+            onClick={handlePrev}
+            className="w-20 h-20 flex items-center justify-center transition-all duration-300"
+            style={{
+              filter: 'drop-shadow(0 4px 12px rgba(135, 153, 189, 0.2))'
+            }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Previous project"
+          >
+            <svg viewBox="0 0 100 100" className="w-full h-full">
+              {/* Left pointing hand */}
+              <path
+                d="M 70 50 L 60 45 L 60 35 Q 60 30 55 30 Q 50 30 50 35 L 50 40 L 50 30 Q 50 25 45 25 Q 40 25 40 30 L 40 35 L 40 25 Q 40 20 35 20 Q 30 20 30 25 L 30 40 L 30 30 Q 30 25 25 25 Q 20 25 20 30 L 20 55 Q 20 65 25 70 L 40 75 Q 50 75 55 70 L 70 55 Z"
+                fill="#0A2C6A"
+                stroke="#8799BD"
+                strokeWidth="1.5"
+              />
+              {/* Cuff detail */}
+              <path
+                d="M 68 52 Q 70 60 72 65"
+                stroke="#8799BD"
+                strokeWidth="2"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </svg>
+          </motion.button>
+
+          {/* Center indicator */}
+          <div className="flex items-center gap-2">
+            {projects.map((_, index) => (
+              <div
+                key={index}
+                className="rounded-full transition-all duration-300"
+                style={{
+                  width: index === currentIndex ? '24px' : '8px',
+                  height: '8px',
+                  background: index === currentIndex 
+                    ? 'linear-gradient(135deg, #8799BD 0%, #8b7d9e 100%)'
+                    : '#8799BD',
+                  opacity: index === currentIndex ? 1 : 0.3
+                }}
+              ></div>
+            ))}
+          </div>
+
+          {/* Right Hand Button */}
+          <motion.button
+            onClick={handleNext}
+            className="w-20 h-20 flex items-center justify-center transition-all duration-300"
+            style={{
+              filter: 'drop-shadow(0 4px 12px rgba(135, 153, 189, 0.2))'
+            }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            aria-label="Next project"
+          >
+            <svg viewBox="0 0 100 100" className="w-full h-full" style={{ transform: 'scaleX(-1)' }}>
+              {/* Right pointing hand (flipped) */}
+              <path
+                d="M 70 50 L 60 45 L 60 35 Q 60 30 55 30 Q 50 30 50 35 L 50 40 L 50 30 Q 50 25 45 25 Q 40 25 40 30 L 40 35 L 40 25 Q 40 20 35 20 Q 30 20 30 25 L 30 40 L 30 30 Q 30 25 25 25 Q 20 25 20 30 L 20 55 Q 20 65 25 70 L 40 75 Q 50 75 55 70 L 70 55 Z"
+                fill="#0A2C6A"
+                stroke="#8799BD"
+                strokeWidth="1.5"
+              />
+              {/* Cuff detail */}
+              <path
+                d="M 68 52 Q 70 60 72 65"
+                stroke="#8799BD"
+                strokeWidth="2"
+                fill="none"
+                strokeLinecap="round"
+              />
+            </svg>
+          </motion.button>
         </div>
       </div>
     </section>
