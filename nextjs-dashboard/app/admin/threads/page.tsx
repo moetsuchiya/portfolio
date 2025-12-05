@@ -35,9 +35,9 @@ type AdminThread = {
 
 // status 表示用の日本語ラベル
 const STATUS_LABEL: Record<AdminThread["status"], string> = {
-    PENDING: "PENDING（未承認）",
-    APPROVED: "APPROVED（承認済み）",
-    REJECTED: "REJECTED（対応しない）",
+    PENDING: "PENDING",
+    APPROVED: "APPROVED",
+    REJECTED: "REJECTED",
 };
 
 // タブの表示順
@@ -54,15 +54,11 @@ export default function AdminThreadsPage() {
     const searchParams = useSearchParams();
 
     // NOTE: URL の ?status= から現在のステータスを取得
-    // 例 /admin/threads?status=APPROVED
-
-    // AdminThread["status"] はこの中のキー "status" の型だけ抜き出す
-    // useMemo は「計算結果をメモ化する」フック。
     const currentStatus: AdminThread["status"] = useMemo(() => {
         const rawStatus = (searchParams.get("status") ?? "PENDING").toUpperCase();
-        return rawStatus === "APPROVED" || rawStatus === "REJECTED" //rawStatusが有効(APPROVED か REJECTED)なら
-            ? (rawStatus as AdminThread["status"]) //その値をそのまま使う
-            : "PENDING"; // それ以外ならpending
+        return rawStatus === "APPROVED" || rawStatus === "REJECTED"
+            ? (rawStatus as AdminThread["status"])
+            : "PENDING";
     }, [searchParams]);
 
     const [threads, setThreads] = useState<AdminThread[]>([]);
@@ -120,128 +116,122 @@ export default function AdminThreadsPage() {
         setThreads((prev) =>
             prev.filter((t) => t.id !== threadId)
         );
-        setFlashMessage(`ステータスを${STATUS_LABEL[newStatus]}に更新しました。`);
+        setFlashMessage(`ステータスを${newStatus}に更新しました。`);
     };
 
     // ===============================
     // 画面表示
     // ===============================
     return (
-        // status が変わったら必ずコンポーネントを作り直すための key
-        <div key={currentStatus} className="max-w-3xl mx-auto p-6 space-y-6">
-            {/* デバッグ用：現在のステータスを表示 */}
-            <p className="text-xs text-gray-500">
-                現在のステータス: {currentStatus}
-            </p>
-            {/* タイトル */}
-            <h1 className="text-2xl font-semibold">お問い合わせ一覧</h1>
-
-            {/* ===============================
-                ステータス切り替えタブ
-            =============================== */}
-            <div className="flex gap-3 text-sm">
-                {STATUS_ORDER.map((status) => {
-                    const isActive = status === currentStatus;
-                    return (
-                        <Link
-                            key={status}
-                            href={`/admin/threads?status=${status}`}
-                            className={
-                                "px-3 py-1 rounded-full border text-xs " +
-                                (isActive
-                                    ? "bg-black text-white border-black"
-                                    : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50")
-                            }
-                        >
-                            {STATUS_LABEL[status]}
-                        </Link>
-                    );
-                })}
-            </div>
-
-            {/* 更新完了メッセージ */}
-            {flashMessage && (
-                <p className="text-sm text-green-700 bg-green-50 border border-green-200 px-3 py-2 rounded">
-                    {flashMessage}
-                </p>
-            )}
-
-            {/* ===============================
-                空状態の文言やエラー/ローディング
-            =============================== */}
-            {loading && (
-                <p className="text-gray-600 text-sm">読み込み中...</p>
-            )}
-            {error && (
-                <p className="text-red-600 text-sm">{error}</p>
-            )}
-            {!loading && !error && threads.length === 0 && (
-                <p className="text-gray-600 text-sm">
-                    現在、このステータスの問い合わせはありません。
-                </p>
-            )}
-
-            {/* ===============================
-                一覧（カード表示）
-            =============================== */}
-            {threads.map((t) => ( //TODO map関数???
-                <div
-                    key={t.id}
-                    className="border rounded p-4 bg-white shadow-sm hover:shadow-md transition"
-                >
-                    {/* --- 上段：名前・メール・受付日時・ステータス --- */}
-                    <div className="flex items-start justify-between gap-4">
-                        <div>
-                            <p className="font-semibold text-lg">{t.name} {t.slug}</p>
-                            <p className="text-sm text-gray-600">{t.email}</p>
-                            <p className="text-xs text-gray-500 mt-1">
-                                受付日時: {new Date(t.createdAt).toLocaleString()}
-                            </p>
-                        </div>
-
-                        {/* ステータスバッジ */}
-                        <span
-                            className={
-                                "text-xs px-2 py-1 rounded-full " +
-                                (t.status === "PENDING"
-                                    ? "bg-yellow-100 text-yellow-800"
-                                    : t.status === "APPROVED"
-                                    ? "bg-green-100 text-green-800"
-                                    : "bg-gray-200 text-gray-700")
-                            }
-                        >
-                            {t.status}
-                        </span>
-                    </div>
-
-                    {/* --- 中段：メッセージの抜粋（最初の1件） --- */}
-                    <p className="mt-3 text-sm text-gray-800">
-                        {t.messages[0]?.body ?? "（メッセージなし）"}
+        <section className="min-h-screen px-6 py-24 pt-32">
+            <div className="max-w-5xl mx-auto">
+                {/* Header */}
+                <div className="text-center mb-16 space-y-3">
+                    <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">Admin</p>
+                    <h2 className="font-serif italic text-[#0A2C6A] text-5xl">Inquiry List</h2>
+                    <p className="text-[#4A5C7A] max-w-md mx-auto leading-relaxed">
+                        ステータスごとにお問い合わせを確認・管理します。
                     </p>
+                </div>
 
-                    {/* --- 下段：操作ボタン or チャットリンク --- */}
-                    <div className="mt-3 flex gap-2 items-center">
-                        {currentStatus === "PENDING" && (
-                            <ApproveRejectButtons
-                                threadId={t.id}
-                                onStatusChange={(newStatus) =>
-                                    handleStatusChange(t.id, newStatus)
-                                }
-                            />
-                        )}
-
-                        {/* APPROVED のときだけチャットを開ける */}
-                        {currentStatus === "APPROVED" && (
+                {/* Status Tabs */}
+                <div className="flex justify-center gap-4 mb-8">
+                    {STATUS_ORDER.map((status) => {
+                        const isActive = status === currentStatus;
+                        return (
                             <Link
-                                href={`/admin/threads/${t.id}`}
-                                className="text-xs text-blue-600 underline hover:text-blue-800"
+                                key={status}
+                                href={`/admin/threads?status=${status}`}
+                                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-300 ${
+                                    isActive
+                                        ? 'bg-[#0A2C6A] text-white shadow-lg'
+                                        : 'bg-white/70 text-[#4A5C7A] border border-transparent hover:bg-white hover:border-[#8799BD]/50'
+                                }`}
                             >
-                                チャットを開く
+                                {STATUS_LABEL[status]}
                             </Link>
-                        )}
+                        );
+                    })}
+                </div>
+                
+                {/* Container for messages and list */}
+                <div className="max-w-4xl mx-auto">
+                    {/* Flash Message */}
+                    {flashMessage && (
+                        <div className="mb-6 bg-green-100/50 border border-green-200/60 text-green-800 px-4 py-3 rounded-xl text-center text-sm">
+                            {flashMessage}
+                        </div>
+                    )}
+
+                    {/* Loading / Error / Empty States */}
+                    {loading && <p className="text-center text-[#8799BD]">読み込み中...</p>}
+                    {error && <p className="text-center text-red-500">{error}</p>}
+                    {!loading && !error && threads.length === 0 && (
+                        <div className="text-center py-12">
+                            <p className="text-[#8799BD]">このステータスの問い合わせはありません。</p>
+                        </div>
+                    )}
+                    
+                    {/* Threads List */}
+                    <div className="space-y-6">
+                        {threads.map((t) => (
+                            <div
+                                key={t.id}
+                                className="bg-white/60 backdrop-blur-sm border border-[#8799BD]/20 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:border-[#8799BD]/40"
+                            >
+                                {/* Top part: Name, email, date, status */}
+                                <div className="flex items-start justify-between gap-4 mb-4">
+                                    <div>
+                                        <p className="font-semibold text-lg text-[#0A2C6A]">{t.name}</p>
+                                        <p className="text-sm text-[#4A5C7A]">{t.email}</p>
+                                        <p className="text-xs text-[#8799BD] mt-1">
+                                            {new Date(t.createdAt).toLocaleString('ja-JP')}
+                                        </p>
+                                    </div>
+                                    <span
+                                        className={`text-xs font-bold px-3 py-1 rounded-full ${
+                                            t.status === "PENDING" ? "bg-yellow-400/20 text-yellow-800" :
+                                            t.status === "APPROVED" ? "bg-green-400/20 text-green-800" :
+                                            "bg-gray-400/20 text-gray-700"
+                                        }`}
+                                    >
+                                        {t.status}
+                                    </span>
+                                </div>
+                                
+                                {/* Message body */}
+                                <p className="text-sm text-[#0A2C6A] bg-black/5 p-4 rounded-lg mb-4">
+                                    {t.messages[0]?.body ?? "（メッセージなし）"}
+                                </p>
+
+                                {/* Actions */}
+                                <div className="flex gap-4 items-center">
+                                    {currentStatus === "PENDING" && (
+                                        <ApproveRejectButtons
+                                            threadId={t.id}
+                                            onStatusChange={(newStatus) =>
+                                                handleStatusChange(t.id, newStatus)
+                                            }
+                                        />
+                                    )}
+                                    {currentStatus === "APPROVED" && (
+                                        <Link
+                                            href={`/admin/threads/${t.id}`}
+                                            className="inline-block px-5 py-2 text-sm text-white rounded-full transition-all duration-500"
+                                            style={{
+                                                background: 'linear-gradient(135deg, #8799BD 0%, #8b7d9e 100%)',
+                                                boxShadow: '0 2px 12px rgba(135, 153, 189, 0.3)'
+                                            }}
+                                        >
+                                            チャットを開く
+                                        </Link>
+                                    )}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
-            ))}
-        </div>
+              </div>
+        </section>
     );
 }

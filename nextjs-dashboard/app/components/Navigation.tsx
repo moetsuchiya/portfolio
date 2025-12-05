@@ -1,21 +1,46 @@
-import React from 'react';
+'use client';
+import React, { useState, useEffect } from 'react';
 
-// 親コンポーネントと型を共有
 type Section = 'home' | 'skills' | 'projects' | 'contact';
 
-interface NavigationProps {
-  activeSection: Section;
-  setActiveSection: (section: Section) => void;
-}
+export default function Navigation() {
+  const [activeSection, setActiveSection] = useState<Section>('home');
 
-export default function Navigation({ activeSection, setActiveSection }: NavigationProps) {
-  // navItemsの型をより厳密に定義
   const navItems: { id: Section; label: string }[] = [
     { id: 'home', label: 'Home' },
     { id: 'skills', label: 'Skills' },
     { id: 'projects', label: 'Projects' },
-    { id: 'contact', label: 'Contact' }
   ];
+
+  const handleScroll = (sectionId: Section) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    const handleScrollObserver = () => {
+      const sections = navItems.map(item => document.getElementById(item.id));
+      const scrollPosition = window.scrollY + window.innerHeight / 2;
+
+      for (const section of sections) {
+        if (section) {
+          const sectionTop = section.offsetTop;
+          const sectionHeight = section.offsetHeight;
+          if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+            setActiveSection(section.id as Section);
+            break;
+          }
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScrollObserver);
+    return () => {
+      window.removeEventListener('scroll', handleScrollObserver);
+    };
+  }, []); // Empty dependency array ensures this runs once on mount
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-[#e8e4f3]">
@@ -29,7 +54,7 @@ export default function Navigation({ activeSection, setActiveSection }: Navigati
             {navItems.map((item) => (
               <li key={item.id}>
                 <button
-                  onClick={() => setActiveSection(item.id)}
+                  onClick={() => handleScroll(item.id)}
                   className={`transition-all duration-300 ${
                     activeSection === item.id
                       ? 'text-[#a78bca] border-b-2 border-[#a78bca]'

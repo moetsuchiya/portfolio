@@ -32,13 +32,13 @@ export default function Skills() {
   return (
     <section className="min-h-screen px-6 py-24 pt-32">
       <div className="max-w-6xl mx-auto">
-        <div className="text-center mb-16 space-y-4">
-          <p className="text-[#a78bca] tracking-wide">What I Can Do</p>
-          <h2 className="font-serif italic text-[#6b5d7a]">
-            Skills & Expertise
+        <div className="text-center mb-20 space-y-3">
+          <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">My Expertise</p>
+          <h2 className="font-serif italic text-[#0A2C6A] text-5xl">
+            My Core Skills
           </h2>
-          <p className="text-[#8b7d9e] max-w-2xl mx-auto">
-            専門学校で習得したスキルと、個人プロジェクトで磨いた技術をご紹介します。
+          <p className="text-[#4A5C7A] max-w-md mx-auto leading-relaxed">
+            私の専門知識と技術をご紹介します。
           </p>
         </div>
 

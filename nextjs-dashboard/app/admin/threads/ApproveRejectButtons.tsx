@@ -11,6 +11,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 type Props = {
     threadId: string;
@@ -102,43 +103,58 @@ export default function ApproveRejectButtons({ threadId, onStatusChange }: Props
     // ▼ 画面（JSX）
     // ======================================
     return (
-        <div className="mt-3 space-y-1">
-            <div className="flex gap-2">
-
-                {/* 承認ボタン */}
-                <button
-                    className="px-3 py-1 text-xs rounded bg-green-600 text-white hover:bg-green-700 disabled:opacity-60 disabled:cursor-not-allowed"
+        <div className="space-y-3">
+            <div className="flex gap-4">
+                {/* Approve Button (Primary Style) */}
+                <motion.button
+                    className="px-5 py-2 text-xs font-semibold text-white rounded-full transition-all duration-500 disabled:opacity-60"
+                    style={{
+                        background: 'linear-gradient(135deg, #5a8b5a 0%, #3a7a3a 100%)', // Greenish gradient
+                        boxShadow: '0 4px 16px rgba(90, 139, 90, 0.3)'
+                    }}
                     onClick={() => handleClick("APPROVED")}
                     disabled={submitting || !!resultStatus}
-                    // submitting = true ならクリック不可
-                    // resultStatus が設定済みならクリック不可（2回押し防止）
+                    whileHover={{
+                        scale: (submitting || !!resultStatus) ? 1 : 1.05,
+                        boxShadow: (submitting || !!resultStatus) ? '0 4px 16px rgba(90, 139, 90, 0.3)' : '0 6px 24px rgba(90, 139, 90, 0.4)',
+                    }}
+                    whileTap={{ scale: (submitting || !!resultStatus) ? 1 : 0.95 }}
                 >
                     {submitting ? "更新中..." : "承認"}
-                </button>
+                </motion.button>
 
-                {/* 却下ボタン */}
-                <button
-                    className="px-3 py-1 text-xs rounded bg-gray-300 text-gray-800 hover:bg-gray-400 disabled:opacity-60 disabled:cursor-not-allowed"
+                {/* Reject Button (Secondary Style) */}
+                <motion.button
+                    className="px-5 py-2 text-xs font-semibold text-[#4A5C7A] rounded-full transition-all duration-500 disabled:opacity-60"
+                    style={{
+                        border: '2px solid #aeb8d0',
+                        background: 'transparent'
+                    }}
                     onClick={() => handleClick("REJECTED")}
                     disabled={submitting || !!resultStatus}
+                    whileHover={{
+                        scale: (submitting || !!resultStatus) ? 1 : 1.05,
+                        background: '#e8eaf0',
+                    }}
+                    whileTap={{ scale: (submitting || !!resultStatus) ? 1 : 0.95 }}
                 >
                     却下
-                </button>
+                </motion.button>
             </div>
 
-            {/* ステータス更新後の確認メッセージ */}
-            {resultStatus && (
-                <p className="text-xs text-green-700">
-                    {resultStatus === "APPROVED"
-                        ? "承認済みに更新しました。"
-                        : "対応しないに更新しました。"}
-                </p>
-            )}
-
-            {/* APIエラー表示 */}
-            {error && (
-                <p className="text-xs text-red-600">{error}</p>
-            )}
+            {/* Status/Error Messages */}
+            <div className="h-4"> {/* Placeholder to prevent layout shift */}
+                {resultStatus && (
+                    <p className="text-xs text-green-700">
+                        {resultStatus === "APPROVED"
+                            ? "承認済みに更新しました。"
+                            : "対応しないに更新しました。"}
+                    </p>
+                )}
+                {error && (
+                    <p className="text-xs text-red-600">{error}</p>
+                )}
+            </div>
         </div>
     );
 }
