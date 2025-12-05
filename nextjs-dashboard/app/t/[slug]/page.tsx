@@ -91,12 +91,12 @@ export default async function UserThreadPage(
             <div className="max-w-4xl mx-auto">
                  {/* Header */}
                 <div className="text-center mb-16 space-y-3">
-                    <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">Connect</p>
+                    <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">Chat</p>
                     <h2 className="font-serif italic text-[#0A2C6A] text-5xl">
                         Let's Talk
                     </h2>
                     <p className="text-[#4A5C7A] mt-6 max-w-md mx-auto leading-relaxed">
-                        I'm always open to discussing new projects, creative ideas, or opportunities.
+                        お問合せチャットです。土屋が管理画面からお返事いたします。
                     </p>
                 </div>
 

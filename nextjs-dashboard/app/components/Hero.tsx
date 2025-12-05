@@ -1,8 +1,23 @@
+'use client';
 import React from 'react';
 import { ImageWithFallback } from './figma/ImageWithFallback';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 
 export default function Hero() {
+  const router = useRouter();
+
+  const handleScroll = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handleNavigate = (path: string) => {
+    router.push(path);
+  };
+
   return (
     <section className="min-h-screen flex items-center justify-center px-6 pt-20 relative">
       {/* Decorative Corner Ornaments - Embossed Style */}
@@ -197,6 +212,7 @@ export default function Hero() {
           {/* CTA Buttons */}
           <div className="flex gap-6 justify-center pt-4">
             <motion.button 
+              onClick={() => handleScroll('projects')}
               className="px-8 py-3 text-white rounded-full transition-all duration-500"
               style={{
                 background: 'linear-gradient(135deg, #8799BD 0%, #8b7d9e 100%)',
@@ -213,6 +229,7 @@ export default function Hero() {
             </motion.button>
             
             <motion.button 
+              onClick={() => handleNavigate('/contact')}
               className="px-8 py-3 text-[#0A2C6A] rounded-full transition-all duration-500"
               style={{
                 border: '2px solid #8799BD',

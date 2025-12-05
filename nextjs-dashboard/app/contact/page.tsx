@@ -11,6 +11,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { motion } from "framer-motion";
 
 export default function ContactPage() {
     // ----------------------------------------------------
@@ -65,11 +66,7 @@ export default function ContactPage() {
             // -------------------------------------------
             console.log("slug:", data.slug);
             setThreadSlug(data.slug);
-            alert(`送信成功！slug: ${data.slug}`);
-
-
-            // ここで router.push(`/t/${data.slug}`) すると
-            // pendingのチェックなしでチャット画面に飛んでしまうので、
+            
             // ここでは遷移せず「送信完了画面」を見せる
             setSent(true);
 
@@ -86,18 +83,24 @@ export default function ContactPage() {
     // ===============================
     if (sent) {
         return (
-            <div className="max-w-xl mx-auto p-6">
-                <h1 className="text-2xl font-semibold mb-4">Contact</h1>
-                <p className="text-green-600 mb-4">送信ありがとうございました！（今は仮処理）</p>
-                {threadSlug && (
-                    <Link
-                        href={`/t/${threadSlug}`}
-                        className="text-blue-600 underline underline-offset-2"
-                    >
-                        お問合せチャット画面（thread）へ移動
-                    </Link>
-                )}
-            </div>
+            <section className="min-h-screen flex items-center justify-center px-6">
+                <div className="max-w-xl mx-auto text-center">
+                    <h1 className="text-4xl font-serif italic text-[#0A2C6A] mb-4">Thank You!</h1>
+                    <p className="text-[#4A5C7A] mb-8">お問い合わせありがとうございました。内容を確認の上、返信いたします。</p>
+                    {threadSlug && (
+                        <Link
+                            href={`/t/${threadSlug}`}
+                            className="inline-block text-white px-6 py-3 rounded-full"
+                            style={{
+                                background: 'linear-gradient(135deg, #8799BD 0%, #8b7d9e 100%)',
+                                boxShadow: '0 4px 16px rgba(135, 153, 189, 0.3)'
+                            }}
+                        >
+                            チャット画面へ移動
+                        </Link>
+                    )}
+                </div>
+            </section>
         );
     }
 
@@ -106,40 +109,93 @@ export default function ContactPage() {
     // 初期表示：Contact フォーム
     // ===============================
     return (
-        <div className="max-w-xl mx-auto p-6">
-            <h1 className="text-2xl font-semibold mb-4">Contact</h1>
+        <section className="min-h-screen flex items-center justify-center px-6 py-24 relative">
+             <svg className="absolute top-8 left-8 w-32 h-32 opacity-20" viewBox="0 0 100 100" fill="none">
+                <path d="M5 5 Q10 5 15 8 Q20 12 22 18 Q24 25 24 35 Q24 45 22 52 Q20 58 15 62 Q10 65 5 65" 
+                      stroke="#8799BD" strokeWidth="0.8" fill="none"/>
+                <path d="M8 8 Q12 10 14 14 Q16 20 16 28 Q16 36 14 42 Q12 46 8 48" 
+                      stroke="#8b7d9e" strokeWidth="0.6" fill="none"/>
+                <circle cx="6" cy="6" r="2" fill="#8b7d9e" opacity="0.4"/>
+            </svg>
+            <svg className="absolute top-8 right-8 w-32 h-32 opacity-20" viewBox="0 0 100 100" fill="none" style={{ transform: 'scaleX(-1)' }}>
+                <path d="M5 5 Q10 5 15 8 Q20 12 22 18 Q24 25 24 35 Q24 45 22 52 Q20 58 15 62 Q10 65 5 65" 
+                        stroke="#8799BD" strokeWidth="0.8" fill="none"/>
+                <path d="M8 8 Q12 10 14 14 Q16 20 16 28 Q16 36 14 42 Q12 46 8 48" 
+                        stroke="#8b7d9e" strokeWidth="0.6" fill="none"/>
+                <circle cx="6" cy="6" r="2" fill="#8b7d9e" opacity="0.4"/>
+            </svg>
+            <svg className="absolute bottom-8 left-8 w-32 h-32 opacity-20" viewBox="0 0 100 100" fill="none" style={{ transform: 'scaleY(-1)' }}>
+                 <path d="M5 5 Q10 5 15 8 Q20 12 22 18 Q24 25 24 35 Q24 45 22 52 Q20 58 15 62 Q10 65 5 65" 
+                      stroke="#8799BD" strokeWidth="0.8" fill="none"/>
+                <path d="M8 8 Q12 10 14 14 Q16 20 16 28 Q16 36 14 42 Q12 46 8 48" 
+                      stroke="#8b7d9e" strokeWidth="0.6" fill="none"/>
+                <circle cx="6" cy="6" r="2" fill="#8b7d9e" opacity="0.4"/>
+            </svg>
+            <svg className="absolute bottom-8 right-8 w-32 h-32 opacity-20" viewBox="0 0 100 100" fill="none" style={{ transform: 'scale(-1)' }}>
+                 <path d="M5 5 Q10 5 15 8 Q20 12 22 18 Q24 25 24 35 Q24 45 22 52 Q20 58 15 62 Q10 65 5 65" 
+                      stroke="#8799BD" strokeWidth="0.8" fill="none"/>
+                <path d="M8 8 Q12 10 14 14 Q16 20 16 28 Q16 36 14 42 Q12 46 8 48" 
+                      stroke="#8b7d9e" strokeWidth="0.6" fill="none"/>
+                <circle cx="6" cy="6" r="2" fill="#8b7d9e" opacity="0.4"/>
+            </svg>
 
-            {error && <p className="text-red-600 mb-2">{error}</p>}
-
-            <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <input
-                    type="text"
-                    placeholder="お名前"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="border p-2 rounded"
-                />
-                <input
-                    type="email"
-                    placeholder="メールアドレス"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="border p-2 rounded"
-                />
-                <textarea
-                    placeholder="メッセージ"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    className="border p-2 rounded h-32"
-                />
-                <button
-                    type="submit"
-                    disabled={loading}
-                    className="bg-black text-white px-4 py-2 rounded disabled:opacity-60"
-                >
-                    {loading ? "送信中..." : "送信する（仮）"}
-                </button>
-            </form>
-        </div>
+            <div className="max-w-2xl w-full text-center relative z-10">
+                {/* Header */}
+                <div className="text-center mb-16 space-y-3">
+                    <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">Get In Touch</p>
+                    <h2 className="font-serif italic text-[#0A2C6A] text-5xl">Contact Me</h2>
+                    <p className="text-[#4A5C7A] max-w-md mx-auto leading-relaxed">
+                        プロジェクトのご相談やご質問など、お気軽にお問い合わせください。
+                    </p>
+                </div>
+                
+                <div className="max-w-xl mx-auto">
+                    {error && <p className="text-red-600 mb-4">{error}</p>}
+                    
+                    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+                        <input
+                            type="text"
+                            placeholder="お名前"
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
+                            className="w-full p-4 bg-white/50 border border-[#8799BD]/30 rounded-xl text-[#0A2C6A] placeholder:text-[#8799BD]/80 focus:outline-none focus:ring-2 focus:ring-[#8799BD] transition-all"
+                            required
+                        />
+                        <input
+                            type="email"
+                            placeholder="メールアドレス"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full p-4 bg-white/50 border border-[#8799BD]/30 rounded-xl text-[#0A2C6A] placeholder:text-[#8799BD]/80 focus:outline-none focus:ring-2 focus:ring-[#8799BD] transition-all"
+                            required
+                        />
+                        <textarea
+                            placeholder="メッセージ"
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            className="w-full p-4 bg-white/50 border border-[#8799BD]/30 rounded-xl text-[#0A2C6A] placeholder:text-[#8799BD]/80 focus:outline-none focus:ring-2 focus:ring-[#8799BD] transition-all h-40"
+                            required
+                        />
+                        <motion.button
+                            type="submit"
+                            disabled={loading}
+                            className="px-8 py-4 text-white font-bold rounded-full transition-all duration-500 disabled:opacity-60"
+                            style={{
+                                background: 'linear-gradient(135deg, #8799BD 0%, #8b7d9e 100%)',
+                                boxShadow: '0 4px 16px rgba(135, 153, 189, 0.3)'
+                            }}
+                            whileHover={{ 
+                                scale: loading ? 1 : 1.05,
+                                boxShadow: loading ? '0 4px 16px rgba(135, 153, 189, 0.3)' : '0 6px 24px rgba(135, 153, 189, 0.4)',
+                                transition: { duration: 0.3 }
+                            }}
+                            whileTap={{ scale: loading ? 1 : 0.95 }}
+                        >
+                            {loading ? "送信中..." : "メッセージを送信"}
+                        </motion.button>
+                    </form>
+                </div>
+            </div>
+        </section>
     );
 }

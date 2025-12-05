@@ -188,23 +188,12 @@ export default function Projects() {
             whileTap={{ scale: 0.9 }}
             aria-label="Previous project"
           >
-            <svg viewBox="0 0 100 100" className="w-full h-full">
-              {/* Left pointing hand */}
-              <path
-                d="M 70 50 L 60 45 L 60 35 Q 60 30 55 30 Q 50 30 50 35 L 50 40 L 50 30 Q 50 25 45 25 Q 40 25 40 30 L 40 35 L 40 25 Q 40 20 35 20 Q 30 20 30 25 L 30 40 L 30 30 Q 30 25 25 25 Q 20 25 20 30 L 20 55 Q 20 65 25 70 L 40 75 Q 50 75 55 70 L 70 55 Z"
-                fill="#0A2C6A"
-                stroke="#8799BD"
-                strokeWidth="1.5"
-              />
-              {/* Cuff detail */}
-              <path
-                d="M 68 52 Q 70 60 72 65"
-                stroke="#8799BD"
-                strokeWidth="2"
-                fill="none"
-                strokeLinecap="round"
-              />
-            </svg>
+            <img 
+              src="/pointing-hand.svg" 
+              alt="Previous" 
+              className="w-full h-full" 
+              style={{ transform: 'scaleX(-1)' }} 
+            />
           </motion.button>
 
           {/* Center indicator */}
@@ -236,23 +225,11 @@ export default function Projects() {
             whileTap={{ scale: 0.9 }}
             aria-label="Next project"
           >
-            <svg viewBox="0 0 100 100" className="w-full h-full" style={{ transform: 'scaleX(-1)' }}>
-              {/* Right pointing hand (flipped) */}
-              <path
-                d="M 70 50 L 60 45 L 60 35 Q 60 30 55 30 Q 50 30 50 35 L 50 40 L 50 30 Q 50 25 45 25 Q 40 25 40 30 L 40 35 L 40 25 Q 40 20 35 20 Q 30 20 30 25 L 30 40 L 30 30 Q 30 25 25 25 Q 20 25 20 30 L 20 55 Q 20 65 25 70 L 40 75 Q 50 75 55 70 L 70 55 Z"
-                fill="#0A2C6A"
-                stroke="#8799BD"
-                strokeWidth="1.5"
-              />
-              {/* Cuff detail */}
-              <path
-                d="M 68 52 Q 70 60 72 65"
-                stroke="#8799BD"
-                strokeWidth="2"
-                fill="none"
-                strokeLinecap="round"
-              />
-            </svg>
+            <img 
+              src="/pointing-hand.svg" 
+              alt="Next" 
+              className="w-full h-full" 
+            />
           </motion.button>
         </div>
       </div>
