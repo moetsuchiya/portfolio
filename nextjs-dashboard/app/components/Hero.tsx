@@ -27,55 +27,24 @@ export default function Hero() {
           transition={{ duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
           className="space-y-8"
         >
-          {/* Top label */}
-          <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">
-            Portfolio
-          </p>
-
-          {/* Profile Image */}
-          <motion.div
-            className="mx-auto w-40 h-40 rounded-full overflow-hidden relative"
-            style={{
-              border: "3px solid #8799BD",
-              boxShadow:
-                "0 4px 20px rgba(135, 153, 189, 0.2), inset 0 2px 8px rgba(139, 125, 158, 0.1)",
-            }}
-            whileHover={{ scale: 1.05, transition: { duration: 0.4 } }}
-          >
-            <div className="w-full h-full bg-gradient-to-br from-[#8799BD]/20 to-[#8b7d9e]/20 flex items-center justify-center">
-              <span className="text-6xl text-[#0A2C6A] font-serif italic">
-                YN
-              </span>
-            </div>
-          </motion.div>
 
           {/* Name and Title */}
           <div className="space-y-4">
             {/* Ribbon Banner with Name */}
             <div className="relative inline-block mx-auto">
-              {/* Profile Image - IMG_8699.PNG */}
+              {/* Profile Image*/}
               <motion.div
                 className="mx-auto w-full max-w-2xl relative"
                 whileHover={{ scale: 1.05, transition: { duration: 0.4 } }}
               >
                 <ImageWithFallback
-                  src="/IMG_8699.PNG"
+                  src="/name_rabel.png"
                   fallbackSrc="/opengraph-image.png" // Fallback to opengraph-image if the specified image isn't found
                   alt="Moe Tsuchiya Name Banner"
                   width={600} // Set appropriate width for the image
                   height={150} // Set appropriate height for the image
                   className="w-full h-auto"
                 />
-                <motion.p
-                  className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-serif italic text-white"
-                  style={{
-                    fontSize: "48px",
-                    letterSpacing: "2px",
-                    filter: "drop-shadow(0 4px 12px rgba(10, 44, 106, 0.15))",
-                  }}
-                >
-                  Moe Tsuchiya
-                </motion.p>
               </motion.div>
             </div>
 
