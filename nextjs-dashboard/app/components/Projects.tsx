@@ -9,40 +9,26 @@ export default function Projects() {
 
   const projects = [
     {
-      title: 'E-Commerce Website',
-      category: 'Web Design & Development',
-      description: 'モダンなECサイトのデザインと実装。レスポンシブデザインとスムーズなアニメーションが特徴です。',
-      link: 'https://example.com/ecommerce',
-      image: 'https://images.unsplash.com/photo-1694599048261-a1de00f0117e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjB3ZWJzaXRlJTIwZGVzaWdufGVufDF8fHx8MTc2NDU4MTg2MXww&ixlib=rb-4.1.0&q=80&w=1080'
+      title: 'Standup-Timer',
+      category: 'Django',
+      description: '初めて作ったwebアプリケーション。Djangoを使用',
+      link: 'https://github.com/moetsuchiya/standup-timer',
+      image: '/standup-timer.jpeg'
     },
     {
-      title: 'Portfolio Design',
-      category: 'UI/UX Design',
-      description: 'クリエイティブなポートフォリオサイト。ユーザー体験を重視したインタラクティブなデザイン。',
-      link: 'https://example.com/portfolio',
-      image: 'https://images.unsplash.com/photo-1656264142377-22ae3fefdbc3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwb3J0Zm9saW8lMjB3ZWJzaXRlJTIwc2NyZWVufGVufDF8fHx8MTc2NDYwNjczM3ww&ixlib=rb-4.1.0&q=80&w=1080'
+      title: 'flea-market-system',
+      category: '作成中',
+      description: '現在作成中のSpring Bootのフリマサイト風アプリケーション',
+      link: 'https://github.com/moetsuchiya',
+      image: '/dashboard-screenshot.jpeg'
     },
     {
-      title: 'Mobile App UI',
-      category: 'App Design',
-      description: 'モバイルファーストのアプリUIデザイン。直感的な操作性と美しいビジュアルを実現。',
-      link: 'https://example.com/app',
-      image: 'https://images.unsplash.com/photo-1605108222700-0d605d9ebafe?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBpbnRlcmZhY2V8ZW58MXx8fHwxNzY0NTgzNDMzfDA&ixlib=rb-4.1.0&q=80&w=1080'
+      title: 'Map-Capsule',
+      category: '作成中',
+      description: '現在開発中のモバイルアプリケーション',
+      link: 'https://github.com/moetsuchiya',
+      image: '/completion-screen.png'
     },
-    {
-      title: 'Landing Page',
-      category: 'Web Design',
-      description: 'コンバージョンを意識したランディングページ。視覚的な魅力とユーザビリティを両立。',
-      link: 'https://example.com/landing',
-      image: 'https://images.unsplash.com/photo-1649150849645-92fba77775a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWJzaXRlJTIwbW9ja3VwJTIwc2NyZWVufGVufDF8fHx8MTc2NDUzMTE5M3ww&ixlib=rb-4.1.0&q=80&w=1080'
-    },
-    {
-      title: 'Brand Identity',
-      category: 'Graphic Design',
-      description: '企業のブランディングデザイン。ロゴ、カラーパレット、タイポグラフィを統一。',
-      link: 'https://example.com/branding',
-      image: 'https://images.unsplash.com/photo-1694599048261-a1de00f0117e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjB3ZWJzaXRlJTIwZGVzaWdufGVufDF8fHx8MTc2NDU4MTg2MXww&ixlib=rb-4.1.0&q=80&w=1080'
-    }
   ];
 
   const handleNext = () => {
@@ -84,10 +70,10 @@ export default function Projects() {
         <div className="text-center mb-20 space-y-3">
           <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">Works</p>
           <h2 className="font-serif italic text-[#0A2C6A] text-5xl">
-            Featured Projects
+            Projects
           </h2>
           <p className="text-[#4A5C7A] max-w-md mx-auto leading-relaxed">
-            これまでに制作したプロジェクトの一部をご紹介します。
+            作成中/完成したプロジェクトの一部をご紹介します。
           </p>
         </div>
 
@@ -101,7 +87,7 @@ export default function Projects() {
               return (
                 <motion.div
                   key={`${actualIndex}-${offset}`}
-                  className="absolute w-80 h-[480px] bg-white rounded-2xl overflow-hidden cursor-pointer"
+                  className="absolute w-80 h-[480px] bg-white rounded-2xl overflow-hidden cursor-pointer flex flex-col"
                   style={{
                     ...getCardStyle(offset),
                     border: '3px solid #0A2C6A',
@@ -122,24 +108,24 @@ export default function Projects() {
                   }}
                 >
                   {/* Card Border Decoration */}
-                  <div className="absolute inset-0 pointer-events-none" style={{
+                  <div className="absolute inset-0 pointer-events-none z-10" style={{
                     border: '1px solid #8799BD',
                     margin: '8px',
                     borderRadius: '12px'
                   }}></div>
 
                   {/* Project Image */}
-                  <div className="h-64 overflow-hidden relative">
+                  <div className="h-64 overflow-hidden relative shrink-0">
                     <ImageWithFallback
                       src={project.image}
                       alt={project.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                   </div>
 
                   {/* Project Info */}
-                  <div className="p-6 space-y-4">
+                  <div className="p-6 flex flex-col flex-grow">
                     <div className="space-y-2">
                       <p className="text-[#8799BD] text-xs tracking-wider uppercase">
                         {project.category}
@@ -149,7 +135,7 @@ export default function Projects() {
                       </h3>
                     </div>
 
-                    <p className="text-[#4A5C7A] text-sm leading-relaxed line-clamp-3">
+                    <p className="text-[#4A5C7A] text-sm leading-relaxed line-clamp-3 mt-4">
                       {project.description}
                     </p>
 
@@ -158,14 +144,14 @@ export default function Projects() {
                       href={project.link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-2 px-6 py-2 mt-4 text-white rounded-full transition-all duration-500"
+                      className="inline-flex items-center gap-2 px-6 py-2 mt-auto text-white rounded-full transition-all duration-500 self-start"
                       style={{
                         background: 'linear-gradient(135deg, #8799BD 0%, #8b7d9e 100%)',
                         boxShadow: '0 2px 12px rgba(135, 153, 189, 0.3)'
                       }}
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <span className="text-sm tracking-wide">View Project</span>
+                      <span className="text-sm tracking-wide">作品リンク</span>
                       <ExternalLink className="w-4 h-4" />
                     </a>
                   </div>
