@@ -12,6 +12,8 @@
 // Next.js の「APIレスポンスを簡単に返すためのユーティリティ」
 import { NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 // Prisma と enum を読み込む
 import { PrismaClient, ThreadStatus } from "@/generated/prisma";
 
