@@ -1,20 +1,9 @@
-// ===============================
-// 管理画面ページ (一覧表示)
-// クライアントでクエリパラメータ(URLに付加される文字列)を見ながらAPIを叩いて描画するページ
-// ===============================
-// 役割：
-// ・status（PENDING / APPROVED / REJECTED）ごとに問い合わせ一覧を表示
-// ・PENDING → 承認/却下ボタンを表示
-// ・APPROVED → チャット画面へのリンクを表示
-// ・REJECTED → 表示のみ
-// ===============================
-
 "use client";
 
 import Link from "next/link";
 import ApproveRejectButtons from "./ApproveRejectButtons"; //子コンポーネントをインポート
 import { ThreadStatus } from "@/generated/prisma";
-import { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
 // --- このページで扱う Thread の型 ---
@@ -48,9 +37,9 @@ const STATUS_ORDER: AdminThread["status"][] = [
 ];
 
 // ===============================
-// メインコンポーネント
+// メインのコンテンツ部分
 // ===============================
-export default function AdminThreadsPage() {
+function ThreadsPageContent() {
     const searchParams = useSearchParams();
 
     // NOTE: URL の ?status= から現在のステータスを取得
@@ -234,4 +223,16 @@ export default function AdminThreadsPage() {
               </div>
         </section>
     );
+}
+
+// ===============================
+// ページコンポーネント本体
+// Suspense でラップして useSearchParams を安全に使う
+// ===============================
+export default function AdminThreadsPage() {
+    return (
+        <Suspense fallback={<div className="text-center p-24">読み込み中...</div>}>
+            <ThreadsPageContent />
+        </Suspense>
+    )
 }
