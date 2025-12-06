@@ -110,35 +110,6 @@ export default function ContactPage() {
     // ===============================
     return (
         <section className="min-h-screen flex items-center justify-center px-6 py-24 relative">
-             <svg className="absolute top-8 left-8 w-32 h-32 opacity-20" viewBox="0 0 100 100" fill="none">
-                <path d="M5 5 Q10 5 15 8 Q20 12 22 18 Q24 25 24 35 Q24 45 22 52 Q20 58 15 62 Q10 65 5 65" 
-                      stroke="#8799BD" strokeWidth="0.8" fill="none"/>
-                <path d="M8 8 Q12 10 14 14 Q16 20 16 28 Q16 36 14 42 Q12 46 8 48" 
-                      stroke="#8b7d9e" strokeWidth="0.6" fill="none"/>
-                <circle cx="6" cy="6" r="2" fill="#8b7d9e" opacity="0.4"/>
-            </svg>
-            <svg className="absolute top-8 right-8 w-32 h-32 opacity-20" viewBox="0 0 100 100" fill="none" style={{ transform: 'scaleX(-1)' }}>
-                <path d="M5 5 Q10 5 15 8 Q20 12 22 18 Q24 25 24 35 Q24 45 22 52 Q20 58 15 62 Q10 65 5 65" 
-                        stroke="#8799BD" strokeWidth="0.8" fill="none"/>
-                <path d="M8 8 Q12 10 14 14 Q16 20 16 28 Q16 36 14 42 Q12 46 8 48" 
-                        stroke="#8b7d9e" strokeWidth="0.6" fill="none"/>
-                <circle cx="6" cy="6" r="2" fill="#8b7d9e" opacity="0.4"/>
-            </svg>
-            <svg className="absolute bottom-8 left-8 w-32 h-32 opacity-20" viewBox="0 0 100 100" fill="none" style={{ transform: 'scaleY(-1)' }}>
-                 <path d="M5 5 Q10 5 15 8 Q20 12 22 18 Q24 25 24 35 Q24 45 22 52 Q20 58 15 62 Q10 65 5 65" 
-                      stroke="#8799BD" strokeWidth="0.8" fill="none"/>
-                <path d="M8 8 Q12 10 14 14 Q16 20 16 28 Q16 36 14 42 Q12 46 8 48" 
-                      stroke="#8b7d9e" strokeWidth="0.6" fill="none"/>
-                <circle cx="6" cy="6" r="2" fill="#8b7d9e" opacity="0.4"/>
-            </svg>
-            <svg className="absolute bottom-8 right-8 w-32 h-32 opacity-20" viewBox="0 0 100 100" fill="none" style={{ transform: 'scale(-1)' }}>
-                 <path d="M5 5 Q10 5 15 8 Q20 12 22 18 Q24 25 24 35 Q24 45 22 52 Q20 58 15 62 Q10 65 5 65" 
-                      stroke="#8799BD" strokeWidth="0.8" fill="none"/>
-                <path d="M8 8 Q12 10 14 14 Q16 20 16 28 Q16 36 14 42 Q12 46 8 48" 
-                      stroke="#8b7d9e" strokeWidth="0.6" fill="none"/>
-                <circle cx="6" cy="6" r="2" fill="#8b7d9e" opacity="0.4"/>
-            </svg>
-
             <div className="max-w-2xl w-full text-center relative z-10">
                 {/* Header */}
                 <div className="text-center mb-16 space-y-3">

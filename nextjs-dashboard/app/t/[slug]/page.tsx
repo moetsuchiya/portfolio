@@ -84,7 +84,7 @@ export default async function UserThreadPage(
         );
     }
 
-    const contactEmail = 'your.email@example.com';
+    const contactEmail = 'moet.therese@gmail.com';
 
     return (
         <section className="min-h-screen px-6 py-24 pt-32">
@@ -185,7 +185,7 @@ export default async function UserThreadPage(
                         </a>
                         <span className="text-[#8b7d9e]">·</span>
                         <a
-                        href="https://github.com"
+                        href="https://github.com/moetsuchiya"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-[#8799BD] hover:text-[#0A2C6A] transition-colors duration-500 tracking-wide"
@@ -194,7 +194,7 @@ export default async function UserThreadPage(
                         </a>
                         <span className="text-[#8b7d9e]">·</span>
                         <a
-                        href="https://linkedin.com"
+                        href="https://www.linkedin.com/in/moe-tsuchiya-8a284b258/"
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-[#8799BD] hover:text-[#0A2C6A] transition-colors duration-500 tracking-wide"

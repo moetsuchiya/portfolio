@@ -10,7 +10,7 @@
 // ・保存後は「作成したメッセージの情報」を JSON として返す。
 // ===============================
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient, MessageAuthor } from "@/generated/prisma";
 
 const prisma = new PrismaClient();
@@ -22,11 +22,11 @@ const prisma = new PrismaClient();
 // ユーザーが 1 件の Thread にメッセージを追加する
 // ===============================
 export async function POST(
-    request: Request,
-    { params }: { params: { slug: string } }
+    request: NextRequest,
+    { params }: { params: Promise<{ slug: string }> }
 ) {
     try {
-        const slug = params.slug;
+        const { slug } = await params;
         // URL の [slug] パラメータ（Thread の slug）
 
         // -------------------------------------

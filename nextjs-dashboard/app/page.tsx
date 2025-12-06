@@ -14,7 +14,7 @@ export default function HomePage() {
         <section id="home">
           <Hero />
         </section>
-        <section id="skills">
+        <section id="skills" className="mb-4">
           <Skills />
         </section>
         <section id="projects">

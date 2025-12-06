@@ -54,7 +54,7 @@ export default function Projects() {
   };
 
   return (
-    <section className="min-h-screen px-6 py-24 pt-32 relative overflow-hidden">
+    <section className="min-h-screen relative overflow-hidden">
       {/* Decorative Corner Ornaments */}
       <svg className="absolute top-8 left-8 w-24 h-24 opacity-15" viewBox="0 0 100 100" fill="none">
         <path d="M5 5 Q10 5 15 8 Q20 12 22 18 Q24 25 24 35" stroke="#8799BD" strokeWidth="0.8" fill="none"/>
@@ -65,7 +65,7 @@ export default function Projects() {
         <circle cx="6" cy="6" r="1.5" fill="#8b7d9e" opacity="0.4"/>
       </svg>
 
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto px-6 py-24 pt-32">
         {/* Header */}
         <div className="text-center mb-20 space-y-3">
           <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">Works</p>
