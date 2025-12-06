@@ -9,17 +9,27 @@
 // ・存在しなければ 404 を返す。
 // ===============================
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
 import { PrismaClient } from "@/generated/prisma";
+
+
 
 const prisma = new PrismaClient();
 
+
+
 export async function GET(
-    _req: Request,
-    { params }: { params: { slug: string } }
+
+    _req: NextRequest,
+
+    { params }: { params: Promise<{ slug: string }> }
+
 ) {
+
     try {
-        const { slug } = params;
+
+        const { slug } = await params;
 
         // -------------------------------------
         // 1. slug に一致する Thread を1件取得

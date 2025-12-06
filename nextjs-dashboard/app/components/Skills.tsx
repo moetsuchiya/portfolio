@@ -1,37 +1,25 @@
 import React from 'react';
-import { Code2, Palette, Layout, Sparkles } from 'lucide-react';
+import { PanelsTopLeft, ServerCog, } from 'lucide-react';
 
 export default function Skills() {
   const skills = [
     {
-      icon: Code2,
-      title: 'Web Development',
-      description: 'HTML, CSS, JavaScript, React',
-      skills: ['React', 'TypeScript', 'Tailwind CSS', 'Next.js']
+      icon: PanelsTopLeft,
+      title: 'Frontend Development',
+      description: 'Building interactive and responsive interfaces',
+      skills: ['React', 'TypeScript', 'Next.js']
     },
     {
-      icon: Palette,
-      title: 'Design',
-      description: 'UI/UX Design, Graphic Design',
-      skills: ['Figma', 'Adobe XD', 'Photoshop', 'Illustrator']
+      icon: ServerCog,
+      title: 'Backend Development',
+      description: 'Building reliable server-side logic and APIs',
+      skills: ['Java', 'Spring Boot', 'PostgreSQL', 'AWS']
     },
-    {
-      icon: Layout,
-      title: 'Responsive Design',
-      description: 'Mobile-first approach',
-      skills: ['Flexbox', 'Grid', 'Media Queries', 'Animation']
-    },
-    {
-      icon: Sparkles,
-      title: 'Creative Solutions',
-      description: 'Problem solving & Innovation',
-      skills: ['UX Research', 'Wireframing', 'Prototyping', 'Testing']
-    }
   ];
 
   return (
-    <section className="min-h-screen px-6 py-24 pt-32">
-      <div className="max-w-6xl mx-auto">
+    <section>
+      <div className="max-w-6xl mx-auto px-6 py-24 pt-32">
         <div className="text-center mb-20 space-y-3">
           <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">My Expertise</p>
           <h2 className="font-serif italic text-[#0A2C6A] text-5xl">
