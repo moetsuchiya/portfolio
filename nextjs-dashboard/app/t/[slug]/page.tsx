@@ -11,6 +11,10 @@ import { UserReplyForm } from "./UserReplyForm";
 import { ThreadMessages } from "./ThreadMessages";
 import { UserThreadDetail } from "./types";
 
+import { PrismaClient } from "@/generated/prisma";
+
+const prisma = new PrismaClient();
+
 // ===============================
 // ページコンポーネント本体（サーバーコンポーネント）
 // ===============================
@@ -23,21 +27,21 @@ export default async function UserThreadPage(
     const { slug } = await params;
 
     // ============================
-    // 1. API を叩いて Thread の詳細を取得
+    // 1. DB から Thread の詳細を取得
     // ============================
-    const res = await fetch(
-        `http://localhost:3000/api/threads/${slug}`,
-        {
-            cache: "no-store", // チャットなので毎回最新を取りに行く
-        }
-    );
+    const thread: UserThreadDetail | null = await prisma.thread.findUnique({
+        where: { slug },
+        include: {
+            messages: {
+                orderBy: { createdAt: "asc" },
+            },
+        },
+    });
 
     // ============================
-    // 2. ステータスコードごとのエラーハンドリング
+    // 2. Thread が存在しない場合のハンドリング
     // ============================
-
-    // 404（該当 Thread なし）の場合
-    if (res.status === 404) {
+    if (!thread) {
         return (
             <div className="p-6 max-w-xl mx-auto">
                 <h1 className="text-2xl font-semibold mb-4">ページが見つかりません</h1>
@@ -47,23 +51,6 @@ export default async function UserThreadPage(
             </div>
         );
     }
-
-    // その他のエラー（500 など）
-    if (!res.ok) {
-        return (
-            <div className="p-6 max-w-xl mx-auto">
-                <h1 className="text-2xl font-semibold mb-4">エラーが発生しました</h1>
-                <p className="text-sm text-red-600">
-                    チャットの取得中にエラーが発生しました。時間をおいて再度アクセスしてください。
-                </p>
-            </div>
-        );
-    }
-
-    // ============================
-    //TODO 3. API の戻り値　JSON → JSオブジェクトに変換して型を付ける
-    // ============================
-    const thread: UserThreadDetail = await res.json();
 
     // ============================
     // 4. ステータスに応じた画面表示
