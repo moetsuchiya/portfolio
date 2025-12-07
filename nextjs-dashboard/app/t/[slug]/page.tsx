@@ -66,20 +66,41 @@ export default async function UserThreadPage(
     const thread: UserThreadDetail = await res.json();
 
     // ============================
-    // 4. 画面表示
+    // 4. ステータスに応じた画面表示
     // ============================
-    const isPending = thread.status === "PENDING";
+    // 承認済（APPROVED）でない場合は、ステータスに応じた案内を表示して終了
+    if (thread.status !== "APPROVED") {
+        if (thread.status === "PENDING") {
+            return (
+                <div className="max-w-xl mx-auto p-6 space-y-4">
+                    <header className="space-y-1">
+                        <h1 className="text-xl font-semibold">お問い合わせチャット</h1>
+                    </header>
+                    <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                        管理者が承認するまでお待ちください
+                    </div>
+                </div>
+            );
+        }
 
-    // 承認待ちの場合は案内のみ表示
-    if (isPending) {
+        if (thread.status === "REJECTED") {
+            return (
+                <div className="max-w-xl mx-auto p-6 space-y-4">
+                    <header className="space-y-1">
+                        <h1 className="text-xl font-semibold">お問い合わせチャット</h1>
+                    </header>
+                    <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800">
+                        このお問い合わせは受付を終了しました。
+                    </div>
+                </div>
+            );
+        }
+
+        // 想定外のステータス
         return (
             <div className="max-w-xl mx-auto p-6 space-y-4">
-                <header className="space-y-1">
-                    <h1 className="text-xl font-semibold">お問い合わせチャット</h1>
-                </header>
-                <div className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-800">
-                    管理者が承認するまでお待ちください
-                </div>
+                <h1 className="text-xl font-semibold">無効なページ</h1>
+                <p>このページは現在表示できません。</p>
             </div>
         );
     }
