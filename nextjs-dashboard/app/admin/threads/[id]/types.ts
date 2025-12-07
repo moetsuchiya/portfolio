@@ -5,12 +5,12 @@ export type AdminThreadDetail = {
     slug: string;
     name: string;
     email: string;
-    status?: string;
-    createdAt?: string;
+    status: "PENDING" | "APPROVED" | "REJECTED";
+    createdAt: Date;
     messages: {
         id: string;
-        author?: "USER" | "OWNER"; // メッセージの送り手（ユーザー or 管理者）
+        author: "USER" | "OWNER"; // メッセージの送り主（ユーザー or 管理者）
         body: string;              // メッセージ本文
-        createdAt?: string;
+        createdAt: Date;
     }[];
 };
