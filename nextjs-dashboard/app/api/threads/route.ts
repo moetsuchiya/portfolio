@@ -9,7 +9,7 @@
 // Next.jsの「APIレスポンスを簡単に作るためのユーティリティ」
 import { NextResponse } from "next/server";
 // Prisma と、MessageAuthor enum（USER or OWNER）を使う
-import { PrismaClient, MessageAuthor } from "../../../generated/prisma";
+import { PrismaClient, MessageAuthor } from "@/generated/prisma";
 
 // PrismaClientの初期化（DBと通信する窓口 接続ハブ）
 const prisma = new PrismaClient();
