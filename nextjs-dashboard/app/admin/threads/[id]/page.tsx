@@ -9,10 +9,13 @@
 //  管理者のメッセージ送信フォーム付き
 // ===============================
 
+import { PrismaClient } from "@/generated/prisma";
 import Link from "next/link";
 import { AdminReplyForm } from "./AdminReplyForm";
 import { ThreadMessages } from "./ThreadMessages";
 import { AdminThreadDetail } from "./types";
+
+const prisma = new PrismaClient();
 
 // ===============================
 // ページコンポーネント本体
@@ -25,24 +28,19 @@ export default async function AdminThreadDetailPage(
     { params }: { params: Promise<{ id: string }> }
 ) {
     const { id } = await params;
-    // ============================
-    // 1. API を叩いて Thread の詳細を取得
-    // ============================
-    // - /api/admin/threads/[id] の GET を呼び出す
-    // - cache: "no-store" → 毎回最新の内容を取得（チャットなので必須）
-    const res = await fetch(
-        `http://localhost:3000/api/admin/threads/${id}`,
-        {
-            cache: "no-store",
-        }
-    );
 
     // ============================
-    // 2. ステータスコードごとのエラーハンドリング
+    // 1. DB から Thread の詳細を取得
     // ============================
+    const thread: AdminThreadDetail | null = await prisma.thread.findUnique({
+        where: { id },
+        include: { messages: { orderBy: { createdAt: "asc" } } },
+    });
 
-    // 404（該当 Thread なし）の場合
-    if (res.status === 404) {
+    // ============================
+    // 2. Thread が存在しない場合のハンドリング
+    // ============================
+    if (!thread) {
         return (
             <div className="p-6">
                 <h1 className="text-2xl font-semibold mb-4">Thread not found</h1>
@@ -52,25 +50,6 @@ export default async function AdminThreadDetailPage(
             </div>
         );
     }
-
-    // その他のエラー（500 など）
-    if (!res.ok) {
-        return (
-            <div className="p-6">
-                <h1 className="text-2xl font-semibold mb-4">Error</h1>
-                <p className="text-sm text-red-600">
-                    問い合わせの取得中にエラーが発生しました。
-                </p>
-            </div>
-        );
-    }
-
-    // ============================
-    // 3. JSON → JSオブジェクトに変換して型を付ける
-    // ============================
-    // res.json() の戻り値に AdminThreadDetail 型を付けることで、
-    // thread.name / thread.messages[0].body などに型補完が効く。
-    const thread: AdminThreadDetail = await res.json();
 
     // ============================
     // 4. 画面表示
