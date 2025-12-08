@@ -1,13 +1,12 @@
 // ===============================
-// ユーザー用：返信メッセージ作成 API
+// API: ユーザー用 新規メッセージ投稿 (POST)
 // ===============================
 // 役割：
-// ・ユーザーが Thread（問い合わせ） に対してメッセージを追加するための API。
-// ・対象URL: POST /api/threads/[slug]/messages
-//   → [slug] = Thread.slug
-// ・フロント側（UserReplyForm）から body を受け取り、
-//   DB の Message モデルに author="USER" として保存する。
-// ・保存後は「作成したメッセージの情報」を JSON として返す。
+// ・特定の Thread に対して、ユーザーとして新しいメッセージを投稿する
+// ・URL の [slug] で対象の Thread を特定する
+// ・リクエストボディからメッセージ本文 (`body`) を受け取る
+// ・対象の Thread が存在しない場合は 404 エラーを返す
+// ・作成されたメッセージ情報を返す (status: 201)
 // ===============================
 
 import { NextRequest, NextResponse } from "next/server";
