@@ -5,13 +5,13 @@ export default function Skills() {
   const skills = [
     {
       icon: PanelsTopLeft,
-      title: 'Frontend Development',
+      title: 'フロントエンド',
       description: 'Building interactive and responsive interfaces',
       skills: ['React', 'TypeScript', 'Next.js']
     },
     {
       icon: ServerCog,
-      title: 'Backend Development',
+      title: 'バックエンド',
       description: 'Building reliable server-side logic and APIs',
       skills: ['Java', 'Spring Boot', 'PostgreSQL', 'AWS']
     },
@@ -26,7 +26,7 @@ export default function Skills() {
             My Core Skills
           </h2>
           <p className="text-[#4A5C7A] max-w-md mx-auto leading-relaxed">
-            私の専門知識と技術をご紹介します。
+            UIの構築からAPI設計、データベース設計まで、Webアプリを一通り開発できるスキルを身につけました
           </p>
         </div>
 

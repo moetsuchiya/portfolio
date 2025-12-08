@@ -17,14 +17,14 @@ export default function Projects() {
     },
     {
       title: 'flea-market-system',
-      category: '作成中',
+      category: '作成中(リポジトリなし)',
       description: '現在作成中のSpring Bootのフリマサイト風アプリケーション',
       link: 'https://github.com/moetsuchiya',
       image: '/dashboard-screenshot.jpeg'
     },
     {
       title: 'Map-Capsule',
-      category: '作成中',
+      category: '作成中(リポジトリなし)',
       description: '現在開発中のモバイルアプリケーション',
       link: 'https://github.com/moetsuchiya',
       image: '/completion-screen.png'
