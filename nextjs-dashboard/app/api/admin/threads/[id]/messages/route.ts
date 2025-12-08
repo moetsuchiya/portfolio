@@ -1,12 +1,11 @@
 // ===============================
-// 管理者用：1件の Thread に返信メッセージを追加する API
+// API: 管理者用 新規メッセージ投稿 (POST)
 // ===============================
 // 役割：
-// ・URL: POST /api/admin/threads/[id]/messages
-//   → [id] は Thread.id（cuid）
-// ・管理者としての返信を Message(author="OWNER") として1件追加する。
-// ・body で受け取った本文を、author="USER" として Message に保存する。
-// ・Thread が存在しなければ 404 を返す。
+// ・特定の Thread に対して、管理者 (OWNER) として新しいメッセージを投稿する
+// ・リクエストボディからメッセージ本文 (`body`) を受け取る
+// ・対象の Thread が存在しない場合は 404 エラーを返す
+// ・作成されたメッセージ情報を返す (status: 201)
 // ===============================
 
 import { NextResponse } from "next/server";

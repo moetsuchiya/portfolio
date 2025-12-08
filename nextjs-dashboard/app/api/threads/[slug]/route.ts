@@ -1,12 +1,10 @@
 // ===============================
-// ユーザー用：slug から Thread を1件取得する API
+// API: ユーザー用 Thread 詳細取得 (GET)
 // ===============================
 // 役割：
-// ・URL: GET /api/threads/[slug]
-//   → [slug] は Thread.slug に対応（例: "dqiklb"）
-// ・指定された slug に一致する Thread を1件取得し、
-//   紐づく messages も含めて JSON で返す。
-// ・存在しなければ 404 を返す。
+// ・URL の [slug] に一致する Thread の詳細情報をデータベースから取得して返す
+// ・Thread に紐づくメッセージも一緒に取得する
+// ・対象の Thread が見つからない場合は 404 エラーを返す
 // ===============================
 
 import { NextRequest, NextResponse } from "next/server";

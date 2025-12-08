@@ -1,9 +1,9 @@
 // ===============================
-// 管理画面でのstatus更新用api
+// API: 管理者用 Thread 詳細取得 (GET) / ステータス更新 (PATCH)
 // ===============================
-// PATCH(部分更新用メソッド) /api/admin/threads/[id]
-// 管理画面のApproveRejectButtonsからstatus を更新するときに呼ばれる
-// 例: APPROVED / REJECTED に変更
+// 役割：
+// ・GET: URL の [id] に一致する Thread の詳細情報を取得する
+// ・PATCH(部分更新用メソッド): 指定された Thread の status を更新する (例: PENDING -> APPROVED)
 // ===============================
 
 // Next.js の API レスポンスを作るユーティリティ
