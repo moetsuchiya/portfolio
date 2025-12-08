@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="public/name_rabel.png" alt="moe tsuchiya">
+    <img src="nextjs-dashboard/public/name_rabel.png" alt="moe tsuchiya">
 </div>
 
 # お問い合わせ機能つきポートフォリオサイト
