@@ -1,4 +1,7 @@
-![name image](nextjs-dashboard/public/name_rabel.png)
+<div align="center">
+    <img src="public/name_rabel.png" alt="moe tsuchiya">
+</div>
+
 # お問い合わせ機能つきポートフォリオサイト
 ## サイトURL
 https://portfolio-14jf4pixf-moe-tsuchiyas-projects.vercel.app/
