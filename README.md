@@ -1,57 +1,102 @@
+![name image](nextjs-dashboard/public/name_rabel.png)
 # お問い合わせ機能つきポートフォリオサイト
-
-Next.jsを使用した、ポートフォリオ兼問い合わせ管理アプリケーションです！<br>お問い合わせに対し、個別のチャットでやり取りできます。なお、お問い合わせが承認された後、チャットページのurlがメールで送信されます。
-
-## 目次
-
-1. [プロジェクトについて](#プロジェクトについて)
-2. [スクリーンショット](#スクリーンショット)
-3. [リンク集](#リンク集)
-4. [主な機能](#主な機能)
-5. [環境](#環境)
-6. [ディレクトリ構成](#ディレクトリ構成)
-4. [開発環境構築](#開発環境構築)
-5. [Django コマンド一覧](#Djangoコマンド一覧)
+## サイトURL
+https://portfolio-14jf4pixf-moe-tsuchiyas-projects.vercel.app/
 
 ## プロジェクトについて
-- aa
-  
-## スクリーンショット
+- Next.jsを使用した、ポートフォリオ兼問い合わせ管理アプリケーションです！<br>お問い合わせに対し、個別のチャットでやり取りできます。
 
-![Screenshot 1](public/dashboard-screenshot.jpeg)
-![Screenshot 2](public/completion-screen.png)
+### 開発した背景
+- next.jsを学ぶこと/1ヶ月で一つのプロジェクトを作り切り、デプロイすることを目的として制作しました。単なる静的なポートフォリオサイトにならないよう意識しました。
 
-## リンク集
-
+## 関連リンク集
 - [UIデザイン](https://www.figma.com/design/Yc0vWj973m4x1SUgvZFLpS/Moe-Portfolio?m=auto&t=mkHpt2ApcHUeN3fR-6)
 - [画面遷移図,UI Flow](https://www.figma.com/design/B14XC2oyrUodxDzC8wSofb/UiFlows?m=auto&t=mkHpt2ApcHUeN3fR-6)
 
 
 ## 主な使用技術
 
-*   **Framework**: Next.js 15 (App Router)
-*   **Language**: TypeScript
-*   **Styling**: Tailwind CSS, shadcn/ui
-*   **ORM**: Prisma
-*   **Database**: PostgreSQL
-*   **Authentication**: NextAuth.js
-*   **Email**: Resend
-*   **Others**: Zod, Framer Motion, Embla Carousel
+### Frontend
+
+- **Next.js 15 (App Router)**
+- **React 19**
+- **TypeScript**
+- **Tailwind CSS**
+- **shadcn/ui**
+- **Framer Motion**
+- **Embla Carousel**
+
+### Backend / API
+
+- **Next.js Route Handlers**
+- **Prisma ORM**
+- **Zod (バリデーション)**
+
+### Infrastructure
+
+- **PostgreSQL（Vercel Storage）**
+- **Prisma Accelerate**
+- **Resend（メール送信）**
+- **NextAuth.js（管理画面の認証）**
+
 
 ## 機能一覧
 
 ### ポートフォリオ機能
-- スキル、プロジェクト、経歴の表示
-- レスポンシブデザイン対応
+- **メインページ**
+    - 自己紹介
+    - お問合せフォームへのリンク
+    - 技術スタック
+    - プロジェクト一覧
 
-### 問い合わせ管理機能
-- **問い合わせフォーム:** サイト訪問者が管理者へ問い合わせを送信できます。
+### 問い合わせ機能
+- **問い合わせフォーム**
+    - ユーザーが名前・メール・本文を送信することでお問合せをリクエストします。
+    - お問合せ後、自動でチャット画面URLをユーザーへメール送信します。
+
 - **管理者ダッシュボード:**
-    - 受信した問い合わせを一覧で表示します (`PENDING`, `APPROVED`, `REJECTED` のステータス管理)。
-    - 各問い合わせに対して「承認」または「拒否」を選択できます。
+    - 不適切なお問合せを拒否できます。<br>未承認(PENDING) / 承認(APPROVED) / 拒否(REJECTED) で分類されます。
+    - お問合せチャットを一覧表示します。
+
 - **チャットシステム:**
     - 承認された問い合わせは、ユニークなURLを持つチャットページが生成されます。
     - ユーザーと管理者は、そのページで非同期にメッセージのやり取りができます。
+
+
+## APIエンドポイント
+
+### 管理者用 (`/api/admin`)
+| Method | Endpoint                           | 内容         |
+| ------ | ---------------------------------- | ---------- |
+| GET    | `/api/admin/threads`               | 全スレッド取得    |
+| PATCH  | `/api/admin/threads/[id]`          | ステータス更新    |
+| POST   | `/api/admin/threads/[id]/messages` | 管理者メッセージ送信 |
+
+
+### ユーザー用 (`/api/threads`)
+| Method | Endpoint                       | 内容          |
+| ------ | ------------------------------ | ----------- |
+| POST   | `/api/threads`                 | 新規問い合わせ送信   |
+| GET    | `/api/threads/[slug]`          | スレッド取得      |
+| POST   | `/api/threads/[slug]/messages` | ユーザーメッセージ送信 |
+
+
+## ディレクトリ構成
+
+```
+.
+├── app/                  # App Routerのメインディレクトリ
+│   ├── api/              # APIルート
+│   ├── admin/            # 管理者用ページ
+│   ├── components/       # 共通UIコンポーネント
+│   ├── contact/          # 問い合わせフォームページ
+│   ├── lib/              # データフェッチ、Prismaクライアントなど
+│   └── t/[slug]/         # ユーザー用チャットページ
+├── prisma/               # Prismaスキーマとマイグレーションファイル
+├── public/               # 静的ファイル (画像など)
+└── tailwind.config.ts    # Tailwind CSS設定ファイル
+```
+
 
 ## セットアップと実行方法
 
@@ -87,36 +132,3 @@ Next.jsを使用した、ポートフォリオ兼問い合わせ管理アプリ�
     pnpm dev
     ```
     ブラウザで `http://localhost:3000` を開いてください。
-
-## APIエンドポイント
-
-### 管理者用 (`/api/admin`)
-- `POST /api/admin/threads`: **(未使用)**
-- `GET /api/admin/threads`: 全ての問い合わせスレッドを取得
-- `PATCH /api/admin/threads/[id]`: 特定スレッドのステータス（承認/拒否）を更新
-- `POST /api/admin/threads/[id]/messages`: 特定スレッドに管理者としてメッセージを送信
-
-### ユーザー用 (`/api/threads`)
-- `POST /api/threads`: 新規問い合わせスレッドを作成
-- `GET /api/threads/[slug]`: 特定スレッドの情報を取得
-- `POST /api/threads/[slug]/messages`: 特定スレッドにユーザーとしてメッセージを送信
-
-## ディレクトリ構成
-
-```
-.
-├── app/                  # App Routerのメインディレクトリ
-│   ├── api/              # APIルート
-│   ├── admin/            # 管理者用ページ
-│   ├── components/       # 共通UIコンポーネント
-│   ├── contact/          # 問い合わせフォームページ
-│   ├── lib/              # データフェッチ、Prismaクライアントなど
-│   └── t/[slug]/         # ユーザー用チャットページ
-├── prisma/               # Prismaスキーマとマイグレーションファイル
-├── public/               # 静的ファイル (画像など)
-└── tailwind.config.ts    # Tailwind CSS設定ファイル
-```
-
-## ライセンス
-
-このプロジェクトのライセンスは ... です。
