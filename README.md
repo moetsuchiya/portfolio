@@ -1,12 +1,30 @@
-# Portfolio & Inquiry Management App
+# お問い合わせ機能つきポートフォリオサイト
 
-これは、Next.js (App Router) を使用して構築されたポートフォリオ兼問い合わせ管理アプリケーションです。Next.jsの公式チュートリアルをベースに、独自の機能を追加開発しています。
+Next.jsを使用した、ポートフォリオ兼問い合わせ管理アプリケーションです！<br>お問い合わせに対し、個別のチャットでやり取りできます。なお、お問い合わせが承認された後、チャットページのurlがメールで送信されます。
 
+## 目次
+
+1. [プロジェクトについて](#プロジェクトについて)
+2. [スクリーンショット](#スクリーンショット)
+3. [リンク集](#リンク集)
+4. [主な機能](#主な機能)
+5. [環境](#環境)
+6. [ディレクトリ構成](#ディレクトリ構成)
+4. [開発環境構築](#開発環境構築)
+5. [Django コマンド一覧](#Djangoコマンド一覧)
+
+## プロジェクトについて
+- aa
+  
 ## スクリーンショット
 
-<!-- (ここにアプリケーションのスクリーンショットを挿入) -->
 ![Screenshot 1](public/dashboard-screenshot.jpeg)
 ![Screenshot 2](public/completion-screen.png)
+
+## リンク集
+
+- [UIデザイン](https://www.figma.com/design/Yc0vWj973m4x1SUgvZFLpS/Moe-Portfolio?m=auto&t=mkHpt2ApcHUeN3fR-6)
+- [画面遷移図,UI Flow](https://www.figma.com/design/B14XC2oyrUodxDzC8wSofb/UiFlows?m=auto&t=mkHpt2ApcHUeN3fR-6)
 
 
 ## 主な使用技術
