@@ -108,7 +108,7 @@ export default async function UserThreadPage(
                     </p>
                     <p className="text-[#4A5C7A] mt-6 max-w-md mx-auto leading-relaxed">
                         <Link
-                            href="https://portfolio-dd44psfhf-moe-tsuchiyas-projects.vercel.app/"
+                            href="/"
                             className="text-sm text-[#8799BD] hover:text-[#0A2C6A] transition-colors duration-300"
                         >
                             ← 一覧に戻る
