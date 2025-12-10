@@ -10,7 +10,7 @@
 import { UserReplyForm } from "./UserReplyForm";
 import { ThreadMessages } from "./ThreadMessages";
 import { UserThreadDetail } from "./types";
-
+import Link from "next/link";
 import { PrismaClient } from "@/generated/prisma";
 
 const prisma = new PrismaClient();
@@ -104,7 +104,15 @@ export default async function UserThreadPage(
                         Let's Talk
                     </h2>
                     <p className="text-[#4A5C7A] mt-6 max-w-md mx-auto leading-relaxed">
-                        お問合せチャットです。土屋が管理画面からお返事いたします。
+                        土屋が管理画面からお返事いたします。
+                    </p>
+                    <p className="text-[#4A5C7A] mt-6 max-w-md mx-auto leading-relaxed">
+                        <Link
+                            href="https://portfolio-dd44psfhf-moe-tsuchiyas-projects.vercel.app/"
+                            className="text-sm text-[#8799BD] hover:text-[#0A2C6A] transition-colors duration-300"
+                        >
+                            ← 一覧に戻る
+                        </Link>
                     </p>
                 </div>
 
