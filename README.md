@@ -8,6 +8,50 @@ https://portfolio-9nf2gpx8t-moe-tsuchiyas-projects.vercel.app/
 
 ## プロジェクトについて
 - Next.jsを使用した、ポートフォリオ兼問い合わせ管理アプリケーションです！<br>お問い合わせに対し、個別のチャットでやり取りできます。
+<table>
+  <tr>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/1209e649-07db-4c81-a1aa-3e50b6da8de0" width="100%">
+    </td>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/5e6a69ff-6a72-4ee9-9b61-4e1085dac14a" width="100%">
+    </td>
+  </tr>
+  <tr>
+    <td>プロフィールページのメイン画面です。</td>
+    <td>今まで作った制作物です。リポジトリに遷移することができます。</td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/ee5e3148-1259-47ad-9db7-c476cd64d906" width="100%">
+    </td>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/a0d69d77-6988-4ded-8e27-8fe068d9e058" width="100%">
+    </td>
+  </tr>
+  <tr>
+    <td>メイン画面からお問合せフォームに遷移できます。</td>
+    <td>管理者画面では、受け取ったお知らせを承認/拒否できます。</td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/d4df93e0-6718-4bcb-9030-bd29f1e61049" width="100%">
+    </td>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/c321a4fe-8a3d-4a2d-9fad-47d9ccaf3078" width="100%">
+    </td>
+  </tr>
+  <tr>
+    <td>お問合せ後、チャットリンクがメールで送信されます。</td>
+    <td>お問合せが承認されると、個別のチャットにて会話ができます。</td>
+  </tr>
+</table>
 
 ### 開発した背景
 - next.jsを学ぶこと/1ヶ月で一つのプロジェクトを作り切り、デプロイすることを目的として制作しました。単なる静的なポートフォリオサイトにならないよう意識しました。
@@ -41,6 +85,7 @@ https://portfolio-9nf2gpx8t-moe-tsuchiyas-projects.vercel.app/
 - **Prisma Accelerate**
 - **Resend（メール送信）**
 - **NextAuth.js（管理画面の認証）**
+
 
 
 ## 機能一覧
