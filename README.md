@@ -54,7 +54,7 @@ https://portfolio-9nf2gpx8t-moe-tsuchiyas-projects.vercel.app/
 </table>
 
 ### 開発した背景
-- next.jsを学ぶこと/1ヶ月で一つのプロジェクトを作り切り、デプロイすることを目的として制作しました。単なる静的なポートフォリオサイトにならないよう意識しました。
+- next.jsを学ぶことと、1ヶ月で一つのプロジェクトをデプロイすることを目的として制作しました。単なる静的なポートフォリオサイトにならないよう意識しました。
 
 ## 関連リンク集
 - [UIデザイン](https://www.figma.com/design/Yc0vWj973m4x1SUgvZFLpS/Moe-Portfolio?m=auto&t=mkHpt2ApcHUeN3fR-6)
@@ -65,28 +65,16 @@ https://portfolio-9nf2gpx8t-moe-tsuchiyas-projects.vercel.app/
 
 ### Frontend
 
-- **Next.js 15 (App Router)**
-- **React 19**
-- **TypeScript**
-- **Tailwind CSS**
-- **shadcn/ui**
-- **Framer Motion**
-- **Embla Carousel**
+- **Next.js 15**: App Router
+- **Tailwind CSS**: CSSフレームワーク
+- **shadcn/ui**: UIコンポーネント
+- **Lucide React**: アイコンセット
 
 ### Backend / API
 
-- **Next.js Route Handlers**
-- **Prisma ORM**
-- **Zod (バリデーション)**
-
-### Infrastructure
-
-- **PostgreSQL（Vercel Storage）**
-- **Prisma Accelerate**
-- **Resend（メール送信）**
-- **NextAuth.js（管理画面の認証）**
-
-
+- **Prisma ORM**: データベース操作ライブラリ
+- **SQLite**: データベース
+- **EmailJS**: お問い合わせのメール通知機能
 
 ## 機能一覧
 
