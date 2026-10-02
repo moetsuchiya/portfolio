@@ -44,13 +44,13 @@ export default function Navigation() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-sm border-b border-[#e8e4f3]">
-      <div className="max-w-7xl mx-auto px-6 py-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
         <div className="flex justify-between items-center">
           <div className="font-serif italic text-[#8b7d9e]">
             Portfolio
           </div>
           
-          <ul className="flex gap-8">
+          <ul className="flex gap-4 sm:gap-8">
             {navItems.map((item) => (
               <li key={item.id}>
                 <button

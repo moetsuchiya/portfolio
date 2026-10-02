@@ -1,16 +1,18 @@
-'use client';
 import React from 'react';
 import Hero from '@/app/components/Hero';
 import Skills from '@/app/components/Skills';
 import Projects from '@/app/components/Projects';
 import Navigation from '@/app/components/Navigation';
+import { listProjects } from '@/app/lib/projects';
 
-export default function HomePage() {
+export const dynamic = 'force-dynamic';
+export default async function HomePage() {
+  const projects = await listProjects();
   return (
     <div className="min-h-screen">
       <Navigation />
       
-      <main>
+      <main id="main-content">
         <section id="home">
           <Hero />
         </section>
@@ -18,7 +20,7 @@ export default function HomePage() {
           <Skills />
         </section>
         <section id="projects">
-          <Projects />
+          <Projects initialProjects={projects} />
         </section>
       </main>
     </div>

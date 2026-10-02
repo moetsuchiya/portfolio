@@ -4,7 +4,7 @@
 // 役割：
 // ・名前、メールアドレス、メッセージを入力するフォームを表示する
 // ・入力された内容で新しい Thread を作成する API (POST /api/threads) を呼び出す
-// ・API 成功後、EmailJS を使ってユーザーにチャットページの URL を記載したメールを送信する
+// ・APIが保存とメール送信を行い、その結果とチャットリンクを表示する
 // ・送信完了後は、完了メッセージとチャットページへのリンクを表示する
 // ===============================
 
@@ -15,7 +15,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { motion } from "framer-motion";
-import emailjs from "@emailjs/browser";
+
 
 export default function ContactPage() {
     // ----------------------------------------------------
@@ -26,6 +26,7 @@ export default function ContactPage() {
     const [message, setMessage] = useState("");
 
     // APIに送信後の状態管理
+    const [emailSent, setEmailSent] = useState(false);
     const [sent, setSent] = useState(false);      // 送信完了画面用
     const [loading, setLoading] = useState(false); //送信中ボタンの制御
     const [error, setError] = useState<string | null>(null);
@@ -68,38 +69,13 @@ export default function ContactPage() {
             // 成功時：APIが返してきた slug を閲覧できる
             // この slug がチャットページのURLになる
             // -------------------------------------------
-            console.log("slug:", data.slug);
             setThreadSlug(data.slug);
-
-            // -------------------------------------------
-            // EmailJSでメールを送信する。envファイルに入れる！
-            // -------------------------------------------
-            const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
-            const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
-            const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
-            
-            if (!serviceId || !templateId || !publicKey) {
-                console.error("EmailJS environment variables are not set correctly.");
-                throw new Error("メール送信設定が不完全なようです...管理者にお問い合わせください。");
-            }
-            
-            const chatUrl = `${window.location.origin}/t/${data.slug}`;
-
-            const templateParams = {
-                customer_name: name,
-                to_email: email,
-                chat_url: chatUrl, // この変数をemailJSで使う
-            };
-
-            await emailjs.send(serviceId, templateId, templateParams, publicKey);
-            
-            console.log("Email sent successfully!");
-            // ここでは遷移せず「送信完了画面」を見せる
+            setEmailSent(data.emailSent === true);
             setSent(true);
 
-        } catch (err: any) {
+        } catch (err: unknown) {
             console.error("Email sending failed:", err);
-            setError(err.message ?? "エラーが発生しました");
+            setError(err instanceof Error ? err.message : "エラーが発生しました");
         } finally {
             // 成功・失敗に関わらずローディング終了
             setLoading(false);
@@ -114,7 +90,7 @@ export default function ContactPage() {
             <section className="min-h-screen flex items-center justify-center px-6">
                 <div className="max-w-xl mx-auto text-center">
                     <h1 className="text-4xl font-serif italic text-[#0A2C6A] mb-4">Thank You!</h1>
-                    <p className="text-[#4A5C7A] mb-8">お問い合わせありがとうございます。内容を確認いたしました。ご入力いただいたメールアドレス宛に、お問い合わせチャットのリンクをお送りしましたのでご確認ください。</p>
+                    <p className="text-[#4A5C7A] mb-8">{emailSent ? "お問い合わせを受け付けました。チャットのリンクをメールでお送りしました。" : "お問い合わせを受け付けました。メールは送信されていません。下のチャットリンクを保存してください。"}</p>
                     {threadSlug && (
                         <Link
                             href={`/t/${threadSlug}`}

@@ -1,3 +1,4 @@
+import { requireAdminPage } from "@/app/lib/auth";
 // ===============================
 // 管理者用：1件の Thread 詳細＋メッセージ一覧を表示するページ
 // ===============================
@@ -9,13 +10,13 @@
 //  管理者のメッセージ送信フォーム付き
 // ===============================
 
-import { PrismaClient } from "@/generated/prisma";
+import { prisma } from "@/app/lib/prisma";
 import Link from "next/link";
 import { AdminReplyForm } from "./AdminReplyForm";
 import { ThreadMessages } from "./ThreadMessages";
 import { AdminThreadDetail } from "./types";
 
-const prisma = new PrismaClient();
+
 
 // ===============================
 // ページコンポーネント本体
@@ -27,6 +28,7 @@ export default async function AdminThreadDetailPage(
     // NOTE: 分割代入と型注釈を同時に書いている
     { params }: { params: Promise<{ id: string }> }
 ) {
+    await requireAdminPage();
     const { id } = await params;
 
     // ============================
@@ -91,7 +93,7 @@ export default async function AdminThreadDetailPage(
                     <div className="relative bg-white/30 backdrop-blur-sm" style={{ boxShadow: '0 0 0 1px rgba(135, 153, 189, 0.2)' }}>
                         {/* Chat Header */}
                         <div
-                            className="relative px-12 py-6"
+                            className="relative px-4 sm:px-12 py-6"
                             style={{ borderBottom: '0.5px solid rgba(135, 153, 189, 0.2)' }}
                         >
                             <div className="flex items-start justify-between">
@@ -139,7 +141,7 @@ export default async function AdminThreadDetailPage(
 
                         {/* 管理者返信フォーム（クライアントコンポーネント） */}
                         <div
-                            className="relative px-12 py-8 bg-white/20 backdrop-blur-sm"
+                            className="relative px-4 sm:px-12 py-8 bg-white/20 backdrop-blur-sm"
                             style={{ borderTop: '0.5px solid rgba(135, 153, 189, 0.25)' }}
                         >
                             <AdminReplyForm threadId={thread.id} />

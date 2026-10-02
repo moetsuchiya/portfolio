@@ -19,7 +19,7 @@ type Props = {
 
 export function ThreadMessages({ thread }: Props) {
     return (
-        <div className="relative h-[560px] overflow-y-auto px-12 py-12 space-y-8">
+        <div className="relative h-[560px] overflow-y-auto px-4 sm:px-12 py-12 space-y-8">
             {/* Decorative elements */}
             <div className="absolute top-8 right-12 text-[#8799BD] opacity-25 text-xl">✦</div>
             <div className="absolute top-32 left-16 text-[#8b7d9e] opacity-20 text-sm">✧</div>
@@ -41,7 +41,7 @@ export function ThreadMessages({ thread }: Props) {
                             transition={{ duration: 0.8, ease: [0.25, 0.1, 0.25, 1], delay: index * 0.1 }}
                             className={`flex ${isOwner ? 'justify-end' : 'justify-start'}`}
                         >
-                            <div className={`max-w-[70%] ${isOwner ? 'items-end' : 'items-start'} flex flex-col gap-2`}>
+                            <div className={`max-w-[90%] sm:max-w-[70%] ${isOwner ? 'items-end' : 'items-start'} flex flex-col gap-2`}>
                                 <p className="text-xs text-[#8799BD] px-3 tracking-wide">
                                     {isOwner ? "管理者" : thread.name}
                                 </p>
@@ -53,7 +53,7 @@ export function ThreadMessages({ thread }: Props) {
                                         boxShadow: '0 2px 16px rgba(10, 44, 106, 0.04)'
                                     }}
                                 >
-                                    <p className="leading-relaxed text-[#0A2C6A]">{m.body}</p>
+                                    <p className="leading-relaxed whitespace-pre-wrap break-words text-[#0A2C6A]">{m.body}</p>
                                 </motion.div>
 
                                 {m.createdAt && (

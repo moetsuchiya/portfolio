@@ -1,3 +1,5 @@
+export const metadata = { robots: { index: false, follow: false } };
+export const dynamic = "force-dynamic";
 // ===============================
 // ユーザー用：1件の Thread を slug で表示するページ
 // ===============================
@@ -11,9 +13,9 @@ import { UserReplyForm } from "./UserReplyForm";
 import { ThreadMessages } from "./ThreadMessages";
 import { UserThreadDetail } from "./types";
 import Link from "next/link";
-import { PrismaClient } from "@/generated/prisma";
+import { prisma } from "@/app/lib/prisma";
 
-const prisma = new PrismaClient();
+
 
 // ===============================
 // ページコンポーネント本体（サーバーコンポーネント）
@@ -134,7 +136,7 @@ export default async function UserThreadPage(
                     <div className="relative bg-white/30 backdrop-blur-sm" style={{ boxShadow: '0 0 0 1px rgba(135, 153, 189, 0.2)' }}>
                         {/* Chat Header */}
                         <div
-                            className="relative px-12 py-6"
+                            className="relative px-4 sm:px-12 py-6"
                             style={{ borderBottom: '0.5px solid rgba(135, 153, 189, 0.2)' }}
                         >
                             <div className="flex items-start justify-between">
@@ -181,7 +183,7 @@ export default async function UserThreadPage(
                         <ThreadMessages thread={thread} />
                         
                         <div
-                            className="relative px-12 py-8 bg-white/20 backdrop-blur-sm"
+                            className="relative px-4 sm:px-12 py-8 bg-white/20 backdrop-blur-sm"
                             style={{ borderTop: '0.5px solid rgba(135, 153, 189, 0.25)' }}
                         >
                             <UserReplyForm threadSlug={thread.slug} />

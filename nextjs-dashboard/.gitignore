@@ -36,3 +36,12 @@ yarn-error.log*
 next-env.d.ts
 
 /generated/prisma
+
+/playwright-report/
+/test-results/
+/.env.test
+/backups/
+
+# ローカル用SQLite（履歴に入れない）
+prisma/dev.db
+*.db

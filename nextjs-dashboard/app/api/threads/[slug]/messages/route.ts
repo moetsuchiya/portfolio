@@ -1,103 +1,16 @@
-// ===============================
-// API: ユーザー用 新規メッセージ投稿 (POST)
-// ===============================
-// 役割：
-// ・特定の Thread に対して、ユーザーとして新しいメッセージを投稿する
-// ・URL の [slug] で対象の Thread を特定する
-// ・リクエストボディからメッセージ本文 (`body`) を受け取る
-// ・対象の Thread が存在しない場合は 404 エラーを返す
-// ・作成されたメッセージ情報を返す (status: 201)
-// ===============================
-
-import { NextRequest, NextResponse } from "next/server";
-import { PrismaClient, MessageAuthor } from "@/generated/prisma";
-
-const prisma = new PrismaClient();
-// Prisma を使って DB にアクセスするためのクライアント。
-// route.ts のたびに new PrismaClient() して問題ない（Next.js がリクエスト単位で実行するため）。
-
-// ===============================
-// POST /api/threads/[slug]/messages
-// ユーザーが 1 件の Thread にメッセージを追加する
-// ===============================
-export async function POST(
-    request: NextRequest,
-    { params }: { params: Promise<{ slug: string }> }
-) {
-    try {
-        const { slug } = await params;
-        // URL の [slug] パラメータ（Thread の slug）
-
-        // -------------------------------------
-        // 1. リクエストボディ(JSON) を取得
-        // -------------------------------------
-        // 例:
-        // { "body": "管理者からの返信内容" }
-        const json = await request.json();
-        const body: unknown = json.body;
-
-        // -------------------------------------
-        // 2. バリデーション（型 & 空文字チェック）
-        // -------------------------------------
-        if (typeof body !== "string" || body.trim().length === 0) {
-            return NextResponse.json(
-                { error: "メッセージ本文が空です。" },
-                { status: 400 }
-            );
-        }
-
-        // -------------------------------------
-        // 3. Thread が存在するか確認（任意だけど安全）
-        // -------------------------------------
-        // 存在しない slug にメッセージを紐づけると DB 側でエラーになるため、
-        // API レベルで 404 を返すほうが使いやすい。
-        const thread = await prisma.thread.findUnique({
-            where: { slug },
-            select: { id: true },
-        });
-
-        if (!thread) {
-            return NextResponse.json(
-                { error: "指定された Thread が存在しません。" },
-                { status: 404 }
-            );
-        }
-
-        // -------------------------------------
-        // 4. Message を作成（author = USER）
-        // -------------------------------------
-        // ユーザー送信なので MessageAuthor.USER をセット。
-        const message = await prisma.message.create({
-            data: {
-                threadId: thread.id,   // 紐づく Thread の ID
-                body: body.trim(),     // 本文
-                author: MessageAuthor.USER,
-            },
-        });
-
-        // -------------------------------------
-        // 5. 作成したメッセージを返す
-        // -------------------------------------
-        // フロントで router.refresh() 後にも使えるように
-        // 必要なデータのみ返す（全フィールド不要）
-        return NextResponse.json(
-            {
-                id: message.id,
-                body: message.body,
-                author: message.author,
-                createdAt: message.createdAt,
-            },
-            { status: 201 } // 作成成功
-        );
-
-    } catch (err) {
-        // -------------------------------------
-        // 想定外のエラーは 500 として返す
-        // -------------------------------------
-        console.error(err);
-        return NextResponse.json(
-            { error: "メッセージの作成中にエラーが発生しました。" },
-            { status: 500 }
-        );
-    }
+import { z } from 'zod';
+import { rateLimit } from '@/app/lib/auth';
+import { api, HttpError, noStore, readJson, requireSameOrigin, requireWritable } from '@/app/lib/http';
+import { prisma } from '@/app/lib/prisma';
+export async function POST(request: Request, { params }: { params: Promise<{ slug: string }> }) {
+  return api(async () => {
+    requireSameOrigin(request); requireWritable();
+    const { body } = z.object({ body: z.string().trim().min(1).max(10000) }).parse(await readJson(request));
+    const thread = await prisma.thread.findUnique({ where: { slug: (await params).slug }, select: { id: true, status: true } });
+    if (!thread) throw new HttpError(404, 'お問い合わせが見つかりません。');
+    if (thread.status !== 'APPROVED') throw new HttpError(403, '現在このチャットには投稿できません。');
+    await rateLimit('thread:' + thread.id, 20, 60);
+    const message = await prisma.message.create({ data: { threadId: thread.id, body, author: 'USER' } });
+    return Response.json(message, { status: 201, headers: noStore });
+  });
 }

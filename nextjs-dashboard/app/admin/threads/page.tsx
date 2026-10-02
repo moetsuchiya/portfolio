@@ -35,9 +35,9 @@ type AdminThread = {
 
 // status 表示用の日本語ラベル
 const STATUS_LABEL: Record<AdminThread["status"], string> = {
-    PENDING: "PENDING",
-    APPROVED: "APPROVED",
-    REJECTED: "REJECTED",
+    PENDING: "承認待ち",
+    APPROVED: "承認済み",
+    REJECTED: "受付終了",
 };
 
 // タブの表示順
@@ -128,7 +128,7 @@ function ThreadsPageContent() {
                 {/* Header */}
                 <div className="text-center mb-16 space-y-3">
                     <p className="text-[#8799BD] tracking-[0.3em] uppercase text-xs">Admin</p>
-                    <h2 className="font-serif italic text-[#0A2C6A] text-5xl">Inquiry List</h2>
+                    <h2 className="font-serif italic text-[#0A2C6A] text-5xl">お問い合わせ一覧</h2>
                     <p className="text-[#4A5C7A] max-w-md mx-auto leading-relaxed">
                         ステータスごとにお問い合わせを確認・管理します。
                     </p>
